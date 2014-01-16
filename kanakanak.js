@@ -271,7 +271,7 @@
 
             for (var index = 0; index < hierarchy.length && !state.verified; index++) {
                 var currentElem = hierarchy[index];
-                var currentID = validateAttributeString(currentElem.attr("id"));
+                var currentID = validationHelpers.attr(currentElem.attr("id"));
                 // make sure the ID is unique
                 if (currentID && $.isUniqueElementID(currentID)) {
 
@@ -314,7 +314,7 @@
 
             for (var index = 0; index < hierarchy.length; index++) {
                 var currentElem = hierarchy[index];
-                var currentTag = validateTagNameString(currentElem.getTag());
+                var currentTag = validationHelpers.tagName(currentElem.getTag());
 
                 if (currentTag) {
                     state.stack[index].splice(0, 0, currentTag);
@@ -394,7 +394,7 @@
                             classes.splice(10, classes.length - 10);
                         }
                         for (var classIndex = 0; classIndex < classes.length; classIndex++) {
-                            if (!validateClassString(classes[classIndex])) {
+                            if (!validationHelpers.className(classes[classIndex])) {
                                 classes.splice(classIndex, 1);
                             }
                         }
@@ -554,40 +554,42 @@
 
         // Internal functions for the parsing process
 
-        /**
-         * Validate the syntax of a tagName to make sure that it has a valid syntax for the query engine.
-         * Many libraries use invalid property and tag names, such as Facebook that use FB: prefixed tags.
-         * These make the query engines fail and must be filtered out.
-         * @param {string} tagName. The element's tag name
-         */
-        var validateTagNameString = function (tagName) {
-            if (typeof tagName == 'string' && tagName.match(/^[a-zA-Z0-9]+$/gi) != null) {
-                return tagName;
+        var validationHelpers = {
+            /**
+             * Validate the syntax of a tagName to make sure that it has a valid syntax for the query engine.
+             * Many libraries use invalid property and tag names, such as Facebook that use FB: prefixed tags.
+             * These make the query engines fail and must be filtered out.
+             * @param {string} tagName. The element's tag name
+             */
+            tagName : function (tagName) {
+                if (typeof tagName == 'string' && tagName.match(/^[a-zA-Z0-9]+$/gi) != null) {
+                    return tagName;
+                }
+                return false;
+            },
+            /**
+             * Validate the syntax of an attribute to make sure that it has a valid syntax for the query engine.
+             * @param {string} attribute. The element's attribute's value
+             */
+            attr: function (attribute) {
+                if (typeof attribute == 'string' && attribute.match(/^[0-9a-zA-Z][a-zA-Z_\-\:0-9\.]*$/gi) != null) {
+                    return attribute;
+                }
+                return false;
+            },
+
+            /**
+             * Validate the syntax of an attribute to make sure that it has a valid syntax for the query engine.
+             * @param {string} attribute. The element's attribute's value
+             */
+            className : function (className) {
+                if (typeof className == 'string' && className.match(/^\.?[a-zA-Z_\-\:0-9]*$/gi) != null) {
+                    return className;
+                }
+                return false;
             }
-            return false;
         };
 
-        /**
-         * Validate the syntax of an attribute to make sure that it has a valid syntax for the query engine.
-         * @param {string} attribute. The element's attribute's value
-         */
-        var validateAttributeString = function (attribute) {
-            if (typeof attribute == 'string' && attribute.match(/^[0-9a-zA-Z][a-zA-Z_\-\:0-9\.]*$/gi) != null) {
-                return attribute;
-            }
-            return false;
-        };
-
-        /**
-         * Validate the syntax of an attribute to make sure that it has a valid syntax for the query engine.
-         * @param {string} attribute. The element's attribute's value
-         */
-        var validateClassString = function (className) {
-            if (typeof className == 'string' && className.match(/^\.?[a-zA-Z_\-\:0-9]*$/gi) != null) {
-                return className;
-            }
-            return false;
-        };
 
         return this;
     })();
