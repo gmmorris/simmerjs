@@ -129,10 +129,8 @@
     var conflictedKanakanaK = window.KanakanaK;
 
     /**
-     * Runs kanakanak.js in *noConflict* mode, returning the `KanakanaK` variable
-     * to its previous owner. Returns a reference to this KanakanaK object.
-     * It does this by removing KanakanaK from the global namespace, reseting
-     * the original reference and returning the object for future use
+     * Revert the global window.Kanakanak variable to it's original value and return this Kanakanak object.
+     * This allows users to include multiple versions of KanakanaK objects on a single page.
      * @example
      <code><pre>
      KanakanaK.noConflict();
@@ -149,7 +147,7 @@
      * @param {object} config A configuration object with any of the properties tweeked (none/depth/minimumSpecificity)
      * @example
      <code><pre>
-     KanakanaK.configuration({
+        KanakanaK.configuration({
             depth: 3
          });
      </pre></code>
