@@ -23,7 +23,6 @@
      */
     KanakanaK = window.KanakanaK = function (element) {
 
-        // no element, no cigar
         if (!element) {
             // handle error
             onError.call(
@@ -152,7 +151,7 @@
          });
      </pre></code>
      */
-    configuration = function (configValues) {
+    KanakanaK.configuration = function (configValues) {
 
         // If an object param is provided - replace the specific properties
         // it has set in the param with the equivalent property in the config
