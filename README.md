@@ -36,7 +36,7 @@ The global KanakanaK variable has a method called "configuration" which can be u
     {
         depth   :3,
         specifictyThreshold:100,
-        queryEngine :undefined,
+        queryEngine :null,
         errorHandling    :false,
         selectorMaxLength:512
     }
@@ -54,7 +54,7 @@ The global KanakanaK variable has a method called "configuration" which can be u
     {
         depth   :5,
         specifictyThreshold:100,
-        queryEngine :undefined,
+        queryEngine :null,
         errorHandling    :false,
         selectorMaxLength:512
     }
