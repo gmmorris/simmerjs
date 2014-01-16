@@ -35,7 +35,7 @@
         }
 
         // get the element's ancestors (Note that $ isn't jQuery,  but rather a generic DOM wrapper)
-        var hierarchy = retireveHierarchy($.wrap(element), KanakanaK.config.depth);
+        var hierarchy = stackHierarchy($.wrap(element), KanakanaK.config.depth);
 
         // initialize the state of the selector
         var selectorState = {
@@ -96,29 +96,29 @@
 
     // Configuration
     KanakanaK.config = {
-        // How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector.
-        // This is a delicate game because the higher the number the more likely you are to reach a unique selector,
-        // but it also means a longer and more breakable one. Assuming you want to store this selector to use later,
-        // making it longer also means it is more likely to change and loose it's validity.
-        depth   :3,
+
+        // A function for calling an external query engine for testing CSS selectors such as jQuery or Sizzle
+        // (If you have jQuery or Sizzle on the page, you have no need to supply such a function as KanakanaK will detect
+        // these and use them if they are available. this will not work if you have these libraries in noConflict mode.
+        queryEngine :null,
 
         // A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called
         // This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many
         // verifications. This number will have to be tweeked here and there as we use the component...
         specifictyThreshold:100,
 
-        // A function for calling an external query engine for testing CSS selectors such as jQuery or Sizzle
-        // (If you have jQuery or Sizzle on the page, you have no need to supply such a function as KanakanaK will detect
-        // these and use them if they are available. this will not work if you have these libraries in noConflict mode.
-        queryEngine :undefined,
+        // How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector.
+        // This is a delicate game because the higher the number the more likely you are to reach a unique selector,
+        // but it also means a longer and more breakable one. Assuming you want to store this selector to use later,
+        // making it longer also means it is more likely to change and loose it's validity.
+        depth   :3,
 
-        // If an error is encountered in the parsing process, how should KanakanaK handle it?
-        // There are three possible values:
-        //  1) 'silent' which means nothing happens. The error is ignored and KanakanaK simple continues
-        //  2) 'verbose' which means the error will be thrown out of KanakanaK onwards for whoever is using it to catch
-        //  3) A callback function which will be called with the error object as a first parameter and teh element being parsed as second parameter
-        // The default is 'silent'
-        errorHandling    :'silent',
+        // Handling errors in the KanakanaK analysis process.
+        // true / false / callback
+        // false: errors are ignored by KanakanaK
+        // true: errors rethrown by the process
+        // a function callback will be called with two parameters: the exception and the element being analyzed
+        errorHandling    :false,
 
         // A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length
         // then it is treated as if no selector could be found
@@ -179,7 +179,7 @@
      * This is an internal function and is not to be used from the outside (nor can it, it is private)
      * @param {object} element. The elemen't whose ancestry we want to retrieve
      */
-    var retireveHierarchy = function (element, depth) {
+    var stackHierarchy = function (element, depth) {
         var hierarchy = [];
 
         for (var index = 0; index < depth && element != null; index++) {
@@ -599,7 +599,7 @@
      */
     var onError = function (ex, element) {
         // handle error
-        if (typeof this.config.errorHandling == 'string' && this.config.errorHandling == 'verbose') {
+        if (this.config.errorHandling === true) {
             throw ex;
         } else if (typeof this.config.errorHandling == 'function') {
             this.config.errorHandling(ex, element);
