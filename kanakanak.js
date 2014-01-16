@@ -35,7 +35,7 @@
         }
 
         // get the element's ancestors (Note that $ isn't jQuery,  but rather a generic DOM wrapper)
-        var hierarchy = stackHierarchy($.wrap(element), KanakanaK.config.depth);
+        var hierarchy = stackHierarchy($.wrap(element), config.depth);
 
         // initialize the state of the selector
         var selectorState = {
@@ -60,11 +60,11 @@
         // we keep calling the methods until we are either satisfied or run out of methods
         while (parsingMethods.length > 0 && !(selectorState.verified)) {
             try {
-                selectorState = parsingMethods.shift().call(KanakanaK, hierarchy, selectorState, KanakanaK.config);
+                selectorState = parsingMethods.shift().call(KanakanaK, hierarchy, selectorState, config);
 
                 // if we have reached a satisfactory level of specificity, try the selector, perhaps we have found our selector?
-                if (selectorState.specificity >= this.config.specifictyThreshold && !(selectorState.verified)) {
-                    selectorState.verified = analyzeSelectorState(element, selectorState, KanakanaK.config.selectorMaxLength);
+                if (selectorState.specificity >= config.specifictyThreshold && !(selectorState.verified)) {
+                    selectorState.verified = analyzeSelectorState(element, selectorState, config.selectorMaxLength);
                 }
             } catch (ex) {
                 // handle error
@@ -73,12 +73,12 @@
         }
 
         // if we were not able to produce a one-to-one selector, return false
-        if (selectorState.verified === undefined || selectorState.specificity < KanakanaK.config.specifictyThreshold) {
+        if (selectorState.verified === undefined || selectorState.specificity < config.specifictyThreshold) {
             // if it is undefined then verfication has never been run!
             // try and verify, and if verification fails - return false
             // if it is false and the specificity is too low to actually try and find the element in the first place, then we may simply have not run
             // an up to date verification - try again
-            selectorState.verified = analyzeSelectorState(element, selectorState, KanakanaK.config.selectorMaxLength);
+            selectorState.verified = analyzeSelectorState(element, selectorState, config.selectorMaxLength);
         }
 
         if (!selectorState.verified) {
@@ -95,7 +95,7 @@
     KanakanaK.VERSION = '0.1';
 
     // Configuration
-    KanakanaK.config = {
+    var config = {
 
         // A function for calling an external query engine for testing CSS selectors such as jQuery or Sizzle
         // (If you have jQuery or Sizzle on the page, you have no need to supply such a function as KanakanaK will detect
@@ -147,27 +147,27 @@
      * @param {object} config A configuration object with any of the properties tweeked (none/depth/minimumSpecificity)
      * @example
      <code><pre>
-        KanakanaK.configuration({
+        configuration({
             depth: 3
          });
      </pre></code>
      */
-    KanakanaK.configuration = function (config) {
+    configuration = function (configValues) {
 
         // If an object param is provided - replace the specific properties
         // it has set in the param with the equivalent property in the config
-        if(config && config instanceof Object) {
+        if(configValues && configValues instanceof Object) {
             // check whether custom configurations have been specified, if so use them instead
             // of the defaults
-            for (var key in config) {
-                if (config.hasOwnProperty(key) && this.config.hasOwnProperty(key)) {
-                    this.config[key] = config[key];
+            for (var key in configValues) {
+                if (config.hasOwnProperty(key) && configValues.hasOwnProperty(key)) {
+                    config[key] = configValues[key];
                 }
             }
         }
 
         // return the configuration object
-        return this.config;
+        return config;
     };
 
 
@@ -282,7 +282,7 @@
                     if (index == 0) {
                         // An ID provides the highest specificity so we start by verifying the query's success so that, maybe, this will be enough
                         // Note that the first element in the hierarchy (index 0) is the actual element we are looking to parse
-                        if (analyzeSelectorState(hierarchy[0], state, this.config.selectorMaxLength)) {
+                        if (analyzeSelectorState(hierarchy[0], state, config.selectorMaxLength)) {
                             // The ID worked like a charm - mark this state as verified and move on!
                             state.verified = true;
                         } else {
@@ -293,7 +293,7 @@
                         }
                     } else if (state.specificity >= config.specifictyThreshold) {
                         // we have reached the minimum specificity, lets try verifying now, as this will save us having to add more IDs to the selector
-                        if (analyzeSelectorState(hierarchy[0], state, this.config.selectorMaxLength)) {
+                        if (analyzeSelectorState(hierarchy[0], state, config.selectorMaxLength)) {
                             // The ID worked like a charm - mark this state as verified and move on!
                             state.verified = true;
                         }
@@ -333,8 +333,7 @@
         var analyzeElementAttributes = function (hierarchy, state, config) {
 
             var elm = hierarchy[0],
-                tag = elm.getTag(),
-                verify = true;
+                tag = elm.getTag();
 
 
             switch (tag) {
@@ -601,10 +600,10 @@
      */
     var onError = function (ex, element) {
         // handle error
-        if (this.config.errorHandling === true) {
+        if (config.errorHandling === true) {
             throw ex;
-        } else if (typeof this.config.errorHandling == 'function') {
-            this.config.errorHandling(ex, element);
+        } else if (typeof config.errorHandling == 'function') {
+            config.errorHandling(ex, element);
         }
     };
 
@@ -620,8 +619,8 @@
             }
 
             //selector library support
-            if (KanakanaK.config.queryEngine && _.isFunction(KanakanaK.config.queryEngine)) {
-                var result = KanakanaK.config.queryEngine(selector);
+            if (config.queryEngine && _.isFunction(config.queryEngine)) {
+                var result = config.queryEngine(selector);
                 if (typeof(result) == 'object' && result.length !== undefined) {
                     return result;
                 } else {
