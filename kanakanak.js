@@ -11,6 +11,9 @@
      */
     var KanakanaK;
 
+    // Save the previous value of the `kanakanak` variable.
+    var conflictedKanakanaK = window.KanakanaK;
+
     // Initialize the KanakanaK object and set it over the reference on the window
     /**
      * The main KanakanaK action - parses an element on the page to produce a CSS selector for it.
@@ -124,9 +127,6 @@
         selectorMaxLength:512
     };
 
-    // Save the previous value of the `kanakanak` variable.
-    var conflictedKanakanaK = window.KanakanaK;
-
     /**
      * Revert the global window.Kanakanak variable to it's original value and return this Kanakanak object.
      * This allows users to include multiple versions of KanakanaK objects on a single page.
@@ -142,8 +142,7 @@
 
     /**
      * Get/Set the configuration for the KanakanaK object
-     * @constructs
-     * @param {object} config A configuration object with any of the properties tweeked (none/depth/minimumSpecificity)
+     * @param config (Object) A configuration object with any of the properties tweeked (none/depth/minimumSpecificity)
      * @example
      <code><pre>
         configuration({
@@ -176,7 +175,8 @@
     /**
      * Retireve the element's ancestors up to the configured level.
      * This is an internal function and is not to be used from the outside (nor can it, it is private)
-     * @param {object} element. The elemen't whose ancestry we want to retrieve
+     * @param element (Object) The elemen't whose ancestry we want to retrieve
+     * @param depth (number) How deep to into the heirarchy to collect elements
      */
     var stackHierarchy = function (element, depth) {
         var hierarchy = [];
@@ -191,8 +191,8 @@
 
     /**
      * Conver the Selector State into a merged CSS selector
-     * @param {object} state. The current selector state (has the stack and specificity sum)
-     * @param {int} depth. The number of levels to merge (1..state.stack.length)
+     * @param state (object) The current selector state (has the stack and specificity sum)
+     * @param depth (int) The number of levels to merge (1..state.stack.length)
      */
     var convertSelectorStateIntoCSSSelector = function (state, depth) {
 
