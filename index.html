@@ -96,7 +96,10 @@ kanakanak variable as a function.</p>
 <li>
     <span class="list-title">queryEngine</span> - In order to calculate the CSS selector for an element KanaKanaK needs to test the various match selectors that it generates by actually running the query. By default KanaKanaK looks for known query engines on the current page (jQuery and Sizzle for now) to use and if it can't find one of those engines it tries to use Document's querySelectorAll method. If you wish to provide KanaKanaK with a query engine of your own choosing all you have to do is provide this queryEngine config parameter as a function which receives a string selector and return the corresponding array of elements.
     For example, to add support for an external library:
-    <div class="highlight highlight-js">
+</li>
+</ul>
+
+  <div class="highlight highlight-js">
         <pre>
             <span class="c1">// callback to bridge a query to an external library</span>
                 <span class="kd">var</span> <span class="nx">queryUsingTheElmQLibrary</span> <span class="o">=</span> <span class="nb">function</span><span class="p">(</span><span class="mi">selectorMatchString</span><span class="p">){</span>
@@ -110,8 +113,8 @@ kanakanak variable as a function.</p>
                 <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">queryUsingTheElmQLibrary</span><span class="p">,</span>
             <span class="p">}</span>
         </pre>
-    </div>
-</li>
+  </div>
+<ul>
 <li>
 <span class="list-title">specificityThreshold</span> - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: <a href="http://www.w3.org/TR/css3-selectors/#specificity">http://www.w3.org/TR/css3-selectors/#specificity</a>
 </li>
