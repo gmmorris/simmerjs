@@ -139,7 +139,7 @@ ul li:before {
   font-size: 13px;
   color: #b5e853;
   margin-left: -37px;
-  margin-right: 21px;
+  margin-right: 11px;
   line-height: 16px;
 }
 
@@ -253,7 +253,6 @@ a {
 .list-title {
     -webkit-font-smoothing: antialiased;
     color: rgb(181, 232, 83);
-    display: block;
     font-family: Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
     font-size: 18px;
     font-weight: normal;
@@ -262,6 +261,5 @@ a {
     line-height: 27px;
     margin-bottom: 20px;
     margin-left: 0px;
-    margin-right: 0px;
     margin-top: 0px;
 }
