@@ -245,3 +245,23 @@ a {
 .cf {
   zoom:1;
 }
+
+/***
+
+*/
+
+.list-title {
+    -webkit-font-smoothing: antialiased;
+    color: rgb(181, 232, 83);
+    display: block;
+    font-family: Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
+    font-size: 18px;
+    font-weight: normal;
+    height: 27px;
+    letter-spacing: -0.5400000214576721px;
+    line-height: 27px;
+    margin-bottom: 20px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+}

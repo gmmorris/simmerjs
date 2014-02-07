@@ -63,7 +63,7 @@ kanakanak variable as a function.</p>
     <span class="c1">//returns the object:</span>
     <span class="p">{</span>
         <span class="nx">depth</span>   <span class="o">:</span><span class="mi">3</span><span class="p">,</span>
-        <span class="nx">specifictyThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nx">specificityThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
         <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">null</span><span class="p">,</span>
         <span class="nx">errorHandling</span>    <span class="o">:</span><span class="kc">false</span><span class="p">,</span>
         <span class="nx">selectorMaxLength</span><span class="o">:</span><span class="mi">512</span>
@@ -80,7 +80,7 @@ kanakanak variable as a function.</p>
     <span class="c1">//returns the object:</span>
     <span class="p">{</span>
         <span class="nx">depth</span>   <span class="o">:</span><span class="mi">5</span><span class="p">,</span>
-        <span class="nx">specifictyThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nx">specificityThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
         <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">null</span><span class="p">,</span>
         <span class="nx">errorHandling</span>    <span class="o">:</span><span class="kc">false</span><span class="p">,</span>
         <span class="nx">selectorMaxLength</span><span class="o">:</span><span class="mi">512</span>
@@ -91,14 +91,34 @@ kanakanak variable as a function.</p>
 
 <ul>
 <li>
-<code>depth</code> - How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector. This is a delicate game because the higher the number the more likely you are to reach a unique selector, but it also means a longer and more breakable one. Assuming you want to store this selector to use later, making it longer also means it is more likely to change and loose it's validity.</li>
-<li>
-<code>specifictyThreshold</code> - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: <a href="http://www.w3.org/TR/css3-selectors/#specificity">http://www.w3.org/TR/css3-selectors/#specificity</a>
+    <span class="list-title">depth</span> - How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector. This is a delicate game because the higher the number the more likely you are to reach a unique selector, but it also means a longer and more breakable one. Assuming you want to store this selector to use later, making it longer also means it is more likely to change and loose it's validity.
 </li>
 <li>
-<code>errorHandling</code> - How to handle errors which occur during the analysis? The default is 'silent'. There are three possible values: 1) 'silent' which means nothing happens. The error is ignored and KanakanaK continues as usual. 2) 'verbose' which means the error will be thrown and has to be caught by the calling code. 3) A callback function which will be called with the error object as a first parameter and the element being parsed as second parameter.</li>
+    <span class="list-title">queryEngine</span> - In order to calculate the CSS selector for an element KanaKanaK needs to test the various match selectors that it generates by actually running the query. By default KanaKanaK looks for known query engines on the current page (jQuery and Sizzle for now) to use and if it can't find one of those engines it tries to use Document's querySelectorAll method. If you wish to provide KanaKanaK with a query engine of your own choosing all you have to do is provide this queryEngine config parameter as a function which receives a string selector and return the corresponding array of elements.
+    For example, to add support for an external library:
+    <div class="highlight highlight-js">
+        <pre>
+            <span class="c1">// callback to bridge a query to an external library</span>
+                <span class="kd">var</span> <span class="nx">queryUsingTheElmQLibrary</span> <span class="o">=</span> <span class="nb">function</span><span class="p">(</span><span class="mi">selectorMatchString</span><span class="p">){</span>
+            <span class="c1">   //the query method receives a string selector and returns an array of elements which match the selector</span>
+            <span class="p">    return ElmQ.query(<span class="mi">selectorMatchString</span>);</span>
+            <span class="p">};</span>
+
+            <span class="c1">//The configuration object to pass to the KanaKanaK object</span>
+            <span class="p">{</span>
+            <span class="c1">//....</span>
+                <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">queryUsingTheElmQLibrary</span><span class="p">,</span>
+            <span class="p">}</span>
+        </pre>
+    </div>
+</li>
 <li>
-<code>selectorMaxLength</code> - A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length then it is treated as if no selector could be found. By default 512 characters.</li>
+<span class="list-title">specificityThreshold</span> - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: <a href="http://www.w3.org/TR/css3-selectors/#specificity">http://www.w3.org/TR/css3-selectors/#specificity</a>
+</li>
+<li>
+<span class="list-title">errorHandling</span> - How to handle errors which occur during the analysis? The default is 'silent'. There are three possible values: 1) 'silent' which means nothing happens. The error is ignored and KanakanaK continues as usual. 2) 'verbose' which means the error will be thrown and has to be caught by the calling code. 3) A callback function which will be called with the error object as a first parameter and the element being parsed as second parameter.</li>
+<li>
+<span class="list-title">selectorMaxLength</span> - A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length then it is treated as if no selector could be found. By default 512 characters.</li>
 </ul><h3>
 <a name="conflict" class="anchor" href="#conflict"><span class="octicon octicon-link"></span></a>Conflict</h3>
 
