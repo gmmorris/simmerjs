@@ -8,5 +8,5 @@
         "sizzle" : "1.10.18"
     },
     "ignore": ["test", ".html"],
-    "keywords": ["kanakanak","css","selector"]
+    "keywords": ["kanakanak","css","selector","reverse"]
 }
