@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Kanakanak by gmmorris</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Kanakanak</h1>
+        <h2>A pure Javascript reverse CSS selector engine which calculates a DOM element&#39;s unique CSS selector on the current page.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/gmmorris/kanakanak/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/gmmorris/kanakanak/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/gmmorris/kanakanak" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="kanakanak" class="anchor" href="#kanakanak"><span class="octicon octicon-link"></span></a>KanakanaK</h1>
+
+<p>A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.</p>
+
+<h3>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h3>
+
+<p>To use KanakanaK to analyze an element and produce a unique CSS selector for it, all you have to do is call the global
+kanakanak variable as a function.</p>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"myUniqueElement"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
+    <span class="nt">&lt;br/&gt;</span>
+    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">myElement</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"#myUniqueElement"</span><span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">KanakanaK</span><span class="p">(</span><span class="nx">myElement</span><span class="p">));</span> <span class="c1">// prints "#myUniqueElement"</span>
+</pre></div>
+
+<h3>
+<a name="configurations" class="anchor" href="#configurations"><span class="octicon octicon-link"></span></a>Configurations</h3>
+
+<p>The global KanakanaK variable has a method called "configuration" which can be used in two way:
+1. Simple calling it will return an object which contains the current configuration values:</p>
+
+<div class="highlight highlight-js"><pre>    <span class="c1">// calling</span>
+    <span class="nx">KanakanaK</span><span class="p">.</span><span class="nx">configuration</span><span class="p">();</span>
+
+    <span class="c1">//returns the object:</span>
+    <span class="p">{</span>
+        <span class="nx">depth</span>   <span class="o">:</span><span class="mi">3</span><span class="p">,</span>
+        <span class="nx">specifictyThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">null</span><span class="p">,</span>
+        <span class="nx">errorHandling</span>    <span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+        <span class="nx">selectorMaxLength</span><span class="o">:</span><span class="mi">512</span>
+    <span class="p">}</span>
+</pre></div>
+
+<ol>
+<li> Calling it with an object as a parameter allows you to replace the current configured values with new ones:</li>
+</ol><div class="highlight highlight-js"><pre>    <span class="c1">// calling</span>
+    <span class="nx">KanakanaK</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
+        <span class="nx">depth</span>   <span class="o">:</span><span class="mi">5</span>
+    <span class="p">});</span>
+
+    <span class="c1">//returns the object:</span>
+    <span class="p">{</span>
+        <span class="nx">depth</span>   <span class="o">:</span><span class="mi">5</span><span class="p">,</span>
+        <span class="nx">specifictyThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
+        <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">null</span><span class="p">,</span>
+        <span class="nx">errorHandling</span>    <span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+        <span class="nx">selectorMaxLength</span><span class="o">:</span><span class="mi">512</span>
+    <span class="p">}</span>
+</pre></div>
+
+<p>These are the different configuration options:</p>
+
+<ul>
+<li>
+<code>depth</code> - How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector. This is a delicate game because the higher the number the more likely you are to reach a unique selector, but it also means a longer and more breakable one. Assuming you want to store this selector to use later, making it longer also means it is more likely to change and loose it's validity.</li>
+<li>
+<code>specifictyThreshold</code> - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: <a href="http://www.w3.org/TR/css3-selectors/#specificity">http://www.w3.org/TR/css3-selectors/#specificity</a>
+</li>
+<li>
+<code>errorHandling</code> - How to handle errors which occur during the analysis? The default is 'silent'. There are three possible values: 1) 'silent' which means nothing happens. The error is ignored and KanakanaK continues as usual. 2) 'verbose' which means the error will be thrown and has to be caught by the calling code. 3) A callback function which will be called with the error object as a first parameter and the element being parsed as second parameter.</li>
+<li>
+<code>selectorMaxLength</code> - A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length then it is treated as if no selector could be found. By default 512 characters.</li>
+</ul><h3>
+<a name="conflict" class="anchor" href="#conflict"><span class="octicon octicon-link"></span></a>Conflict</h3>
+
+<p>Just in case you also had the brilliant idea of using a variable called "KanakanaK", or you wish to move it off of the global object then you can use the noConflict method to receive a reference to the object and remove it from the window.
+Calling it will also revert the original value of window.KanakanaK which was there before loading the KanakanaK.js script (if there was one)</p>
+
+<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">myKanak</span> <span class="o">=</span> <span class="nx">KanakanaK</span><span class="p">.</span><span class="nx">noConflict</span><span class="p">();</span>
+    <span class="nx">myKanak</span><span class="p">(</span><span class="nx">myElm</span><span class="p">);</span>
+</pre></div>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
