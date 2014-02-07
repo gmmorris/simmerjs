@@ -56,6 +56,22 @@ kanakanak variable as a function.</p>
 
 <p>In order to give you an idea of flexible KanaKanaK can be here are some examples of the ways it cen generate selectors.</p>
 
+<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span><span class="nt">&gt;</span>
+    <span class="c1">//...</span>
+<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">align=</span><span class="s">"left"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
+    <span class="nt">&lt;br/&gt;</span>
+    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
+    <span class="nt">&lt;img <span class="na">src=</span><span class="s">"/assets/me.png"</span> /&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">myElement</span> <span class="o">=</span> <span class="nb">$</span><span class="p">(</span><span class="s2">"div[align=left]"</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">KanakanaK</span><span class="p">(</span><span class="nx"><span class="nb">$</span><span class="p">(<span class="s2">"img"</span>,</span><span class="nb">myElement</span><span class="p">)</span></span><span class="p">)[<span class="mi">0</span>]);</span> <span class="c1">// prints "#myUniqueElement"</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">KanakanaK</span><span class="p">(</span><span class="nx"><span class="nb">$</span><span class="p">(<span class="s2">"span"</span>,</span><span class="nb">myElement</span><span class="p">)</span></span><span class="p">)[<span class="mi">1</span>]);</span> <span class="c1">// prints "DIV[align='left'] > SPAN:nth-child(3)"</span>
+</pre></div>
+
           <h3>
 <a name="configurations" class="anchor" href="#configurations"><span class="octicon octicon-link"></span></a>Configurations</h3>
 
