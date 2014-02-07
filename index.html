@@ -142,7 +142,13 @@ kanakanak variable as a function.</p>
 <span class="list-title">specificityThreshold</span> - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: <a href="http://www.w3.org/TR/css3-selectors/#specificity">http://www.w3.org/TR/css3-selectors/#specificity</a>
 </li>
 <li>
-<span class="list-title">errorHandling</span> - How to handle errors which occur during the analysis? The default is 'silent'. There are three possible values: 1) 'silent' which means nothing happens. The error is ignored and KanakanaK continues as usual. 2) 'verbose' which means the error will be thrown and has to be caught by the calling code. 3) A callback function which will be called with the error object as a first parameter and the element being parsed as second parameter.</li>
+<span class="list-title">errorHandling</span> - How to handle errors which occur during the analysis? The default is 'silent'. There are three possible values:
+    <ol>
+        <li><span class="list-title">silent</span> which means nothing happens. The error is ignored and KanakanaK continues as usual.</li>
+        <li><span class="list-title">verbose</span> which means the error will be thrown and has to be caught by the calling code.</li>
+        <li>A <span class="list-title">callback function</span> which will be called with the error object as a first parameter and the element being parsed as second parameter.</li>
+    </ol>
+</li>
 <li>
 <span class="list-title">selectorMaxLength</span> - A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length then it is treated as if no selector could be found. By default 512 characters.</li>
 </ul><h3>
