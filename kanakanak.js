@@ -65,7 +65,7 @@
                 selectorState = parsingMethods.shift().call(KanakanaK, hierarchy, selectorState, config);
 
                 // if we have reached a satisfactory level of specificity, try the selector, perhaps we have found our selector?
-                if (selectorState.specificity >= config.specifictyThreshold && !(selectorState.verified)) {
+                if (selectorState.specificity >= config.specificityThreshold && !(selectorState.verified)) {
                     selectorState.verified = analyzeSelectorState(element, selectorState, config.selectorMaxLength);
                 }
             } catch (ex) {
@@ -75,7 +75,7 @@
         }
 
         // if we were not able to produce a one-to-one selector, return false
-        if (selectorState.verified === undefined || selectorState.specificity < config.specifictyThreshold) {
+        if (selectorState.verified === undefined || selectorState.specificity < config.specificityThreshold) {
             // if it is undefined then verfication has never been run!
             // try and verify, and if verification fails - return false
             // if it is false and the specificity is too low to actually try and find the element in the first place, then we may simply have not run
@@ -107,7 +107,7 @@
         // A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called
         // This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many
         // verifications. This number will have to be tweeked here and there as we use the component...
-        specifictyThreshold:100,
+        specificityThreshold:100,
 
         // How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector.
         // This is a delicate game because the higher the number the more likely you are to reach a unique selector,
@@ -290,7 +290,7 @@
                             state.stack[index].pop();
                             state.specificity -= 100;
                         }
-                    } else if (state.specificity >= config.specifictyThreshold) {
+                    } else if (state.specificity >= config.specificityThreshold) {
                         // we have reached the minimum specificity, lets try verifying now, as this will save us having to add more IDs to the selector
                         if (analyzeSelectorState(hierarchy[0], state, config.selectorMaxLength)) {
                             // The ID worked like a charm - mark this state as verified and move on!
