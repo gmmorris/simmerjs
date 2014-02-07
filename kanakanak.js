@@ -181,7 +181,7 @@
     var stackHierarchy = function (element, depth) {
         var hierarchy = [];
 
-        for (var index = 0; index < depth && element != null; index++) {
+        for (var index = 0; index < depth && element !== null; index++) {
             hierarchy[index] = element;
             element = hierarchy[index].parent();
         }
@@ -203,7 +203,7 @@
 
         // cycle through the layers from the top down to the analyzed element
         for (var index = depth - 1; index >= 0; index--) {
-            if (state.stack[index].length == 0) {
+            if (state.stack[index].length === 0) {
                 // if no details were obtainable on this element, and this is not the "top" layer (which we simply ignore),
                 // place the 'all' placeholder in there for the selector
                 if (index !== depth - 1 - rejectableLayers) {
@@ -241,7 +241,7 @@
             }
 
             var results = $.query(selector);
-            validated = (results.length === 1 && (element.el != undefined ? (results[0] === element.el) : (results[0] === element)));
+            validated = (results.length === 1 && (element.el !== undefined ? (results[0] === element.el) : (results[0] === element)));
 
             // we have to mark how deep the valdiation passed at
             if (validated) {
@@ -257,7 +257,7 @@
      * They provide the various ways by which we analyze an element.
      * @type {{}}
      */
-    var parsingLogic = new (function() {
+    var parsingLogic = (function() {
 
         // Actual parsing methods
 
@@ -278,7 +278,7 @@
                     state.specificity += 100;
 
                     // if the index is 0 then this is the ID of the actual element! Which means we have found our selector!
-                    if (index == 0) {
+                    if (index === 0) {
                         // An ID provides the highest specificity so we start by verifying the query's success so that, maybe, this will be enough
                         // Note that the first element in the hierarchy (index 0) is the actual element we are looking to parse
                         if (analyzeSelectorState(hierarchy[0], state, config.selectorMaxLength)) {
@@ -332,19 +332,20 @@
         var analyzeElementAttributes = function (hierarchy, state, config) {
 
             var elm = hierarchy[0],
-                tag = elm.getTag();
+                tag = elm.getTag(),
+                attribute;
 
 
             switch (tag) {
                 case 'A':
-                    var attribute = elm.attr('href');
+                    attribute = elm.attr('href');
                     if (attribute) {
                         state.stack[0].push("A[href=\"" + attribute + "\"]");
                         state.specificity += 10;
                     }
                     break;
                 case 'IMG':
-                    var attribute = elm.attr('src');
+                    attribute = elm.attr('src');
                     if (attribute) {
                         state.stack[0].push("IMG[src=\"" + attribute + "\"]");
                         state.specificity += 10;
@@ -427,7 +428,7 @@
 
                 // If the element has no siblings!
                 // we have no need for the nth-child selector
-                if (siblings.length != 0) {
+                if (siblings.length !== 0) {
                     var elementTag = hierarchy[hierarchyIndex].getTag();
                     var elementClasses = hierarchy[hierarchyIndex].getClasses();
                     var hasUniqueTag = true; // assume unique until proven otherwise
@@ -483,7 +484,7 @@
 
                 // If the element has no siblings!
                 // we have no need for the nth-child selector
-                if (siblings.length != 0) {
+                if (siblings.length !== 0) {
                     var elementTag = hierarchy[hierarchyIndex].getTag();
                     var elementClasses = hierarchy[hierarchyIndex].getClasses();
                     var siblingClasses = [];
@@ -560,7 +561,7 @@
              * @param {string} tagName. The element's tag name
              */
             tagName : function (tagName) {
-                if (typeof tagName == 'string' && tagName.match(/^[a-zA-Z0-9]+$/gi) != null) {
+                if (typeof tagName == 'string' && tagName.match(/^[a-zA-Z0-9]+$/gi) !== null) {
                     return tagName;
                 }
                 return false;
@@ -570,7 +571,7 @@
              * @param {string} attribute. The element's attribute's value
              */
             attr: function (attribute) {
-                if (typeof attribute == 'string' && attribute.match(/^[0-9a-zA-Z][a-zA-Z_\-\:0-9\.]*$/gi) != null) {
+                if (typeof attribute == 'string' && attribute.match(/^[0-9a-zA-Z][a-zA-Z_\-\:0-9\.]*$/gi) !== null) {
                     return attribute;
                 }
                 return false;
@@ -581,7 +582,7 @@
              * @param {string} attribute. The element's attribute's value
              */
             className : function (className) {
-                if (typeof className == 'string' && className.match(/^\.?[a-zA-Z_\-\:0-9]*$/gi) != null) {
+                if (typeof className == 'string' && className.match(/^\.?[a-zA-Z_\-\:0-9]*$/gi) !== null) {
                     return className;
                 }
                 return false;
@@ -678,7 +679,7 @@
                     if (classValue && typeof classValue == 'string') {
                         // trim spaces
                         classValue = classValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-                        if (classValue != '') {
+                        if (classValue !== '') {
                             return classValue.split(' ');
                         }
                     }
@@ -710,7 +711,7 @@
                     }
                     return matched;
                 }
-            }
+            };
         }
     };
 
@@ -724,10 +725,10 @@
         contains  :function (obj, target) {
             var found = false;
 
-            if (obj == null) return found;
+            if (obj === null) return found;
 
             if (obj instanceof Array) {
-                return obj.indexOf(target) != -1
+                return obj.indexOf(target) != -1;
             }
 
             found = this.any(obj, function (value) {
@@ -738,19 +739,20 @@
         any       :function (obj, iterator, context) {
             iterator = iterator || _.identity;
             var result = false;
-            if (obj == null) return result;
+            if (obj === null) return result;
             if (obj instanceof Array) {
                 return obj.some(iterator, context);
             }
             this.each(obj, function (value, index, list) {
-                if (result |= iterator.call(context, value, index, list)) {
+                var itr = result |= iterator.call(context, value, index, list);
+                if (itr) {
                     return this.breaker;
                 }
             });
             return !!result;
         },
         each      :function (obj, iterator, context) {
-            if (obj == null) return;
+            if (obj === null) return;
             if (obj instanceof Array) {
                 obj.forEach(iterator, context);
             } else if (obj.length === +obj.length) {
@@ -767,7 +769,7 @@
         },
         filter    :function (obj, iterator, context) {
             var results = [];
-            if (obj == null) return results;
+            if (obj === null) return results;
             if (obj instanceof Array) return obj.filter(iterator, context);
             this.each(obj, function (value, index, list) {
                 if (iterator.call(context, value, index, list)) results[results.length] = value;

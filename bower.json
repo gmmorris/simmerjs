@@ -1,0 +1,12 @@
+{
+    "name": "kanakanak",
+    "version": "0.1.0",
+    "main": "kanakanak.js",
+    "devDependencies": {
+        "qunit" : "~1.14.0",
+        "jquery" : "1.11.0",
+        "sizzle" : "1.10.18"
+    },
+    "ignore": ["test", ".html"],
+    "keywords": ["kanakanak","css","selector"]
+}

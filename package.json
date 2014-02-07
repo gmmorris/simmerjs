@@ -1,0 +1,31 @@
+{
+    "name": "KanaKanaK",
+    "description": "A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.",
+    "version": "0.1.0",
+    "author": "Gidi Meir Morris",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/gmmorris/kanakanak.git"
+    },
+    "licenses":[
+        {
+            "type":"MIT",
+            "url":"https://github.com/gmmorris/kanakanak/blob/master/LICENSE"
+        }
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+        "load-grunt-tasks": "~0.2.0",
+        "time-grunt": "~0.2.3",
+        "grunt-contrib-watch": "~0.5.3",
+        "bower": "~1.2.8",
+        "grunt": "~0.4.1",
+        "grunt-contrib-requirejs":"~0.4.0",
+        "grunt-contrib-jshint": "~0.7.2",
+        "grunt-contrib-qunit": "latest",
+        "grunt-contrib-connect": "~0.3.0",
+        "grunt-contrib-internal": "~0.4.5"
+    },
+    "keywords":["Grunt","Kanakanak","css"]
+}
