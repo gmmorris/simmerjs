@@ -265,9 +265,9 @@ a {
 }
 
 h1.ir-logo {
-    width: 200px;
-    height: 50px;
-    background: url("../images/logo.png") no-repeat;
+    width: 400px;
+    height: 66px;
+    background: url("../images/logo.png") no-repeat 26px;
 }
 
 h1.ir-logo span {
