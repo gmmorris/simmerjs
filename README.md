@@ -1,4 +1,4 @@
-Simmer JS
+Simmer JS [![Build Status](https://travis-ci.org/gmmorris/simmerjs.svg?branch=master)](https://travis-ci.org/gmmorris/simmerjs) [![Code Climate](https://codeclimate.com/github/gmmorris/simmerjs/badges/gpa.svg)](https://codeclimate.com/github/gmmorris/simmerjs)
 =========
 
 A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.
