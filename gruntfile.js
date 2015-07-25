@@ -6,6 +6,15 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+		bower: {
+			install: {
+				options: {
+					targetDir: 'libraries',
+					layout: 'byComponent'
+				}
+			}
+		},
+		
         qunit: {
             all: {
                 options: {
@@ -45,6 +54,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('test', ['jshint', 'connect', 'qunit']);
+    grunt.registerTask('test', ['bower:install','jshint', 'connect', 'qunit']);
     grunt.registerTask('tdd', ['watch']);
 };
