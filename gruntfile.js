@@ -19,13 +19,13 @@ module.exports = function (grunt) {
         // for changes to the front-end code
         watch: {
             scripts: {
-                files: ['kanakanak.js', 'test/*.js'],
+                files: ['simmer.js', 'test/*.js'],
                 tasks: ['test']
             }
         },
 
         jshint: {
-            files: ['kanakanak.js'],
+            files: ['simmer.js'],
             options: {
                 globals: {
                     jQuery: true,

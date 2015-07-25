@@ -1,5 +1,4 @@
-/**
- * @name kanakanak.js
+/** Simmer 
  * @author Gidi Morris, 2014
  * @version 0.1
  */
@@ -7,30 +6,30 @@
 
     /**
      * The top-level namespace
-     * @namespace KanakanaK. A reverse CSS Selector parser.
+     * @namespace Simmer. A reverse CSS Selector parser.
      */
-    var KanakanaK;
+    var Simmer;
 
     // Save the previous value of the `kanakanak` variable.
-    var conflictedKanakanaK = window.KanakanaK;
+    var conflictedSimmer = window.Simmer;
 
-    // Initialize the KanakanaK object and set it over the reference on the window
+    // Initialize the Simmer object and set it over the reference on the window
     /**
-     * The main KanakanaK action - parses an element on the page to produce a CSS selector for it.
-     * This function will be returned into the global KanakanaK object.
+     * The main Simmer action - parses an element on the page to produce a CSS selector for it.
+     * This function will be returned into the global Simmer object.
      * @param {object} element. A DOM element you wish to create a selector for.
      * @example
      <code><pre>
-     var cssSelectorForDonJulio = KanakanaK(document.getElementByID('DonJulio'));
+     var cssSelectorForDonJulio = Simmer(document.getElementByID('DonJulio'));
      </pre></code>
      */
-    KanakanaK = window.KanakanaK = function (element) {
+    Simmer = window.Simmer = function (element) {
 
         if (!element) {
             // handle error
             onError.call(
-                KanakanaK,
-                new Error('KanakanaK: No element was specified for parsing.'),
+                Simmer,
+                new Error('Simmer: No element was specified for parsing.'),
                 element);
 
             return false;
@@ -62,7 +61,7 @@
         // we keep calling the methods until we are either satisfied or run out of methods
         while (parsingMethods.length > 0 && !(selectorState.verified)) {
             try {
-                selectorState = parsingMethods.shift().call(KanakanaK, hierarchy, selectorState, config);
+                selectorState = parsingMethods.shift().call(Simmer, hierarchy, selectorState, config);
 
                 // if we have reached a satisfactory level of specificity, try the selector, perhaps we have found our selector?
                 if (selectorState.specificity >= config.specificityThreshold && !(selectorState.verified)) {
@@ -70,7 +69,7 @@
                 }
             } catch (ex) {
                 // handle error
-                onError.call(KanakanaK, ex, element);
+                onError.call(Simmer, ex, element);
             }
         }
 
@@ -94,13 +93,13 @@
     };
 
     // Current version of the library.
-    KanakanaK.VERSION = '0.1';
+    Simmer.VERSION = '0.1';
 
     // Configuration
     var config = {
 
         // A function for calling an external query engine for testing CSS selectors such as jQuery or Sizzle
-        // (If you have jQuery or Sizzle on the page, you have no need to supply such a function as KanakanaK will detect
+        // (If you have jQuery or Sizzle on the page, you have no need to supply such a function as Simmer will detect
         // these and use them if they are available. this will not work if you have these libraries in noConflict mode.
         queryEngine :null,
 
@@ -109,15 +108,15 @@
         // verifications. This number will have to be tweeked here and there as we use the component...
         specificityThreshold:100,
 
-        // How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector.
+        // How deep into the DOM hierarchy should Simmer go in order to reach a unique selector.
         // This is a delicate game because the higher the number the more likely you are to reach a unique selector,
         // but it also means a longer and more breakable one. Assuming you want to store this selector to use later,
         // making it longer also means it is more likely to change and loose it's validity.
         depth   :3,
 
-        // Handling errors in the KanakanaK analysis process.
+        // Handling errors in the Simmer analysis process.
         // true / false / callback
-        // false: errors are ignored by KanakanaK
+        // false: errors are ignored by Simmer
         // true: errors rethrown by the process
         // a function callback will be called with two parameters: the exception and the element being analyzed
         errorHandling    :false,
@@ -129,19 +128,19 @@
 
     /**
      * Revert the global window.Kanakanak variable to it's original value and return this Kanakanak object.
-     * This allows users to include multiple versions of KanakanaK objects on a single page.
+     * This allows users to include multiple versions of Simmer objects on a single page.
      * @example
      <code><pre>
-     KanakanaK.noConflict();
+     Simmer.noConflict();
      </pre></code>
      */
-    KanakanaK.noConflict = function () {
-        window.KanakanaK = conflictedKanakanaK;
+    Simmer.noConflict = function () {
+        window.Simmer = conflictedSimmer;
         return this;
     };
 
     /**
-     * Get/Set the configuration for the KanakanaK object
+     * Get/Set the configuration for the Simmer object
      * @param config (Object) A configuration object with any of the properties tweeked (none/depth/minimumSpecificity)
      * @example
      <code><pre>
@@ -150,7 +149,7 @@
          });
      </pre></code>
      */
-    KanakanaK.configuration = function (configValues) {
+    Simmer.configuration = function (configValues) {
 
         // If an object param is provided - replace the specific properties
         // it has set in the param with the equivalent property in the config
@@ -596,7 +595,7 @@
     /**
      * Handle errors in accordance with what is specified in the configuration
      * @param {object/string} ex. The exception object or message
-     * @param {object} element. The element KanakanaK was asked to process
+     * @param {object} element. The element Simmer was asked to process
      */
     var onError = function (ex, element) {
         // handle error
@@ -635,7 +634,7 @@
                     return document.querySelectorAll(selector);
                 } catch(ex) {
                     // handle error
-                    onError.call(KanakanaK,ex,null);
+                    onError.call(Simmer,ex,null);
                 }
             }
             // No library nor methods to use, so return an empty array - no CSS selector will ever be generated in this situation!
