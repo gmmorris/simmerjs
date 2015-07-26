@@ -497,7 +497,7 @@
           if (siblings.length !== 0) {
             // if we don't have a unique tag or a unique class, then we need a nth-child to help us
             // differenciate our element from the rest of the pack
-            hasUniqueClassOrTag = this.analyzeElementSiblings(hierarchy[hierarchyIndex],siblings);
+            hasUniqueClassOrTag = this.analyzeElementSiblings(hierarchy[hierarchyIndex], siblings);
             if (!hasUniqueClassOrTag) {
               state.stack[hierarchyIndex].push(':nth-child(' + indexOfElement + ')');
 
