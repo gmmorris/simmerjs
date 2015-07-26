@@ -478,10 +478,9 @@
        * @param {array} hierarchy. The hierarchy of elements
        * @param {object} state. The current calculated CSS selector
        */
-      analyzeElementSiblings: function (hierarchy, state, config) {
-        var index, hierarchyIndex = 0, siblings, indexOfElement,
-          elementTag, elementClasses, hasUniqueTag, hasUniqueClass,
-          currentElem, currentTag;
+      analyzeHierarchySiblings: function (hierarchy, state, config) {
+        var hierarchyIndex = 0, siblings, indexOfElement, hasUniqueClassOrTag;
+
         while (hierarchyIndex < hierarchy.length && !state.verified) {
           // get siblings BEFORE out element
           siblings = hierarchy[hierarchyIndex].prevAll();
@@ -496,26 +495,10 @@
           // If the element has no siblings!
           // we have no need for the nth-child selector
           if (siblings.length !== 0) {
-            elementTag = hierarchy[hierarchyIndex].getTag();
-            elementClasses = hierarchy[hierarchyIndex].getClasses();
-            hasUniqueTag = true; // assume unique until proven otherwise
-            hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0); // if the element has no class, we may still need the nth-child filter
-
-            for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
-              currentElem = siblings[index];
-              // nodeName is not a jQuery property, so we must go directly to the element
-              currentTag = currentElem.getTag();
-              if (currentTag && currentTag === elementTag) {
-                hasUniqueTag = false;
-              }
-
-              // get the classes that exist on the element but not on his sibling
-              hasUniqueClass = (_.difference(elementClasses, currentElem.getClasses()).length > 0);
-            }
-
             // if we don't have a unique tag or a unique class, then we need a nth-child to help us
             // differenciate our element from the rest of the pack
-            if (!hasUniqueClass && !hasUniqueTag) {
+            hasUniqueClassOrTag = this.analyzeElementSiblings(hierarchy[hierarchyIndex],siblings);
+            if (!hasUniqueClassOrTag) {
               state.stack[hierarchyIndex].push(':nth-child(' + indexOfElement + ')');
 
               // Verify the selector as we don't want to go on and parse the parent's siblings
@@ -529,78 +512,105 @@
 
         return state;
       },
+      analyzeElementSiblings: function (siblingElement, siblings) {
+        var index,
+          elementTag = siblingElement.getTag(),
+          elementClasses = siblingElement.getClasses(),
+          // assume unique until proven otherwise
+          hasUniqueTag = true,
+          // if the element has no class, we may still need the nth-child filter
+          hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0),
+          currentElem,
+          currentTag;
+
+        for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
+          currentElem = siblings[index];
+          // nodeName is not a jQuery property, so we must go directly to the element
+          currentTag = currentElem.getTag();
+          if (currentTag && currentTag === elementTag) {
+            hasUniqueTag = false;
+          }
+
+          // get the classes that exist on the element but not on his sibling
+          hasUniqueClass = (_.difference(elementClasses, currentElem.getClasses()).length > 0);
+        }
+
+        // if we don't have a unique tag or a unique class, then we need a nth-child to help us
+        // differenciate our element from the rest of the pack
+        return hasUniqueClass || hasUniqueTag;
+      },
       /**
        * Inspect the element's siblings by Tag name and Class name and compare them to the analyzed element.
        * The sibling comparison is done from level 0 (the analyzed element) upwards in the hierarchy, In an effort to avoid unneeded parsing.
        * @param {array} hierarchy. The hierarchy of elements
        * @param {object} state. The current calculated CSS selector
        */
-      analyzeTypedSiblings: function (hierarchy, state, config) {
-
-        var index, hierarchyIndex = 0,
-          siblings, indexOfElement,
-          currentElem, currentTag,
-          elementTag, elementClasses, siblingClasses, hasUniqueTag, hasUniqueClass, uniqueClasses, typedIndex;
-        while (hierarchyIndex < hierarchy.length && !state.verified) {
-          // get siblings BEFORE out element and reverse
-          siblings = hierarchy[hierarchyIndex].prevAll().reverse();
-
-          indexOfElement = siblings.length;
-
-          // add the rest of the siblings (those that come after ours)
-          siblings = siblings.concat(hierarchy[hierarchyIndex].nextAll());
-
-          // If the element has no siblings!
-          // we have no need for the nth-child selector
-          if (siblings.length !== 0) {
-            elementTag = hierarchy[hierarchyIndex].getTag();
-            elementClasses = hierarchy[hierarchyIndex].getClasses();
-            siblingClasses = [];
-            hasUniqueTag = true; // assume unique until proven otherwise
-            hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0); // if the element has no class, we may still need the nth-child filter
-            typedIndex = 1; // the nth-of-type index of the element
-
-            for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
-              currentElem = siblings[index];
-              // nodeName is not a jQuery property, so we must go directly to the element
-              currentTag = currentElem.getTag();
-              if (currentTag && currentTag === elementTag) {
-                if (index < indexOfElement) {
-                  //only increment count if we have yet to reach the element
-                  typedIndex += 1;
-                }
-
-                if (index + 1 >= indexOfElement) {
-                  // if we are about to reach the element's index end the loop
-                  // as we no longer need to count element with the same tag as his
-                  hasUniqueTag = false;
-                }
-              }
-
-              // push to stack of classes
-              siblingClasses = siblingClasses.concat(currentElem.getClasses());
-            }
-
-            // get the classes that exist on the element but not on his siblings
-            uniqueClasses = _.difference(elementClasses, siblingClasses);
-            hasUniqueClass = (uniqueClasses.length > 0);
-
-            // if we don't have a unique tag or a unique class, then we need a nth-child to help us
-            // differenciate our element from the rest of the pack
-            if (!hasUniqueClass && !hasUniqueTag) {
-              state.stack[hierarchyIndex].push(':nth-of-type(' + typedIndex + ')');
-
-              // Verify the selector as we don't want to go on and parse the parent's siblings
-              // if we don't have to!
-              state.verified = analyzeSelectorState(hierarchy[0], state, config.selectorMaxLength);
-            }
-          }
-
-          hierarchyIndex += 1;
-        }
-
-        return state;
-      },
+      //analyzeTypedSiblings: function (hierarchy, state, config) {
+      //
+      //  var index, hierarchyIndex = 0,
+      //    siblings, indexOfElement,
+      //    currentElem, currentTag,
+      //    elementTag, elementClasses, siblingClasses, hasUniqueTag, hasUniqueClass, uniqueClasses, typedIndex;
+      //  while (hierarchyIndex < hierarchy.length && !state.verified) {
+      //    // get siblings BEFORE out element and reverse
+      //    siblings = hierarchy[hierarchyIndex].prevAll().reverse();
+      //
+      //    indexOfElement = siblings.length;
+      //
+      //    // add the rest of the siblings (those that come after ours)
+      //    siblings = siblings.concat(hierarchy[hierarchyIndex].nextAll());
+      //
+      //    // If the element has no siblings!
+      //    // we have no need for the nth-child selector
+      //    if (siblings.length !== 0) {
+      //      elementTag = hierarchy[hierarchyIndex].getTag();
+      //      elementClasses = hierarchy[hierarchyIndex].getClasses();
+      //      siblingClasses = [];
+      //      hasUniqueTag = true; // assume unique until proven otherwise
+      //      hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0); // if the element has no class, we may still need the nth-child filter
+      //      typedIndex = 1; // the nth-of-type index of the element
+      //
+      //      for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
+      //        currentElem = siblings[index];
+      //        // nodeName is not a jQuery property, so we must go directly to the element
+      //        currentTag = currentElem.getTag();
+      //        if (currentTag && currentTag === elementTag) {
+      //          if (index < indexOfElement) {
+      //            //only increment count if we have yet to reach the element
+      //            typedIndex += 1;
+      //          }
+      //
+      //          if (index + 1 >= indexOfElement) {
+      //            // if we are about to reach the element's index end the loop
+      //            // as we no longer need to count element with the same tag as his
+      //            hasUniqueTag = false;
+      //          }
+      //        }
+      //
+      //        // push to stack of classes
+      //        siblingClasses = siblingClasses.concat(currentElem.getClasses());
+      //      }
+      //
+      //      // get the classes that exist on the element but not on his siblings
+      //      uniqueClasses = _.difference(elementClasses, siblingClasses);
+      //      hasUniqueClass = (uniqueClasses.length > 0);
+      //
+      //      // if we don't have a unique tag or a unique class, then we need a nth-child to help us
+      //      // differenciate our element from the rest of the pack
+      //      if (!hasUniqueClass && !hasUniqueTag) {
+      //        state.stack[hierarchyIndex].push(':nth-of-type(' + typedIndex + ')');
+      //
+      //        // Verify the selector as we don't want to go on and parse the parent's siblings
+      //        // if we don't have to!
+      //        state.verified = analyzeSelectorState(hierarchy[0], state, config.selectorMaxLength);
+      //      }
+      //    }
+      //
+      //    hierarchyIndex += 1;
+      //  }
+      //
+      //  return state;
+      //},
       // Internal functions for the parsing process
       validationHelpers: {
         /**
@@ -650,7 +660,7 @@
         parsingLogic.analyzeElementCSSClasses,
         parsingLogic.analyzeElementTag,
         /* the nth-child selector has proven unreliable on badly built webpages. It breaks when one of the siblings has a non closed <br>, for example  */
-        parsingLogic.analyzeElementSiblings
+        parsingLogic.analyzeHierarchySiblings
       ];
       this.next = function (hierarchy, selectorState, config) {
         if (this.finished()) {
