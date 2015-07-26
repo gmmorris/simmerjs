@@ -1,170 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
-    <title>KanaKanaK by gmmorris</title>
+    <meta charset="UTF-8">
+    <title>Simmer by gmmorris</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
+    <section class="page-header">
+      <h1 class="project-name">Simmer</h1>
+      <h2 class="project-tagline">A pure Javascript reverse CSS selector engine which calculates a DOM element&#39;s unique CSS selector on the current page.</h2>
+      <a href="https://github.com/gmmorris/simmerjs" class="btn">View on GitHub</a>
+      <a href="https://github.com/gmmorris/simmerjs/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/gmmorris/simmerjs/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <header>
-      <div class="container">
-        <h1 class="ir-logo"><span>KanaKanaK</span></h1>
-        <h2>A pure Javascript reverse CSS selector engine which calculates a DOM element&#39;s unique CSS selector on the current page.</h2>
-
-        <section id="downloads">
-          <a href="https://github.com/gmmorris/kanakanak/zipball/master" class="btn">Download as .zip</a>
-          <a href="https://github.com/gmmorris/kanakanak/tarball/master" class="btn">Download as .tar.gz</a>
-          <a href="https://github.com/gmmorris/kanakanak" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
-    <a href="https://github.com/gmmorris/kanakanak"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-
-    <div class="container">
-      <section id="main_content">
-        <h1>
-<a name="kanakanak" class="anchor" href="#kanakanak"><span class="octicon octicon-link"></span></a>KanakanaK</h1>
+    <section class="main-content">
+      <h1>
+<a id="simmer" class="anchor" href="#simmer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Simmer</h1>
 
 <p>A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.</p>
 
 <h3>
-<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h3>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic usage</h3>
 
-<p>To use KanakanaK to analyze an element and produce a unique CSS selector for it, all you have to do is call the global
-kanakanak variable as a function.</p>
+<p>To use Simmer to analyze an element and produce a unique CSS selector for it, all you have to do is call the global
+Simmer variable as a function.</p>
 
-<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"myUniqueElement"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
-    <span class="nt">&lt;br/&gt;</span>
-    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</pre></div>
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">div</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>myUniqueElement<span class="pl-pds">"</span></span>&gt;
+    &lt;<span class="pl-ent">span</span>&gt;&lt;/<span class="pl-ent">span</span>&gt;
+    &lt;<span class="pl-ent">br</span>/&gt;
+    &lt;<span class="pl-ent">span</span>&gt;&lt;/<span class="pl-ent">span</span>&gt;
+&lt;/<span class="pl-ent">div</span>&gt;</pre></div>
 
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">myElement</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">"#myUniqueElement"</span><span class="p">);</span>
+<div class="highlight highlight-js"><pre><span class="pl-k">var</span> myElement <span class="pl-k">=</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">"</span>#myUniqueElement<span class="pl-pds">"</span></span>);
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">KanakanaK</span><span class="p">(</span><span class="nx">myElement</span><span class="p">));</span> <span class="c1">// prints "#myUniqueElement"</span>
-</pre></div>
+<span class="pl-en">console</span><span class="pl-c1">.log</span>(Simmer(myElement)); <span class="pl-c">// prints "#myUniqueElement"</span></pre></div>
 
 <h3>
-  <a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Basic examples</h3>
+<a id="configurations" class="anchor" href="#configurations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configurations</h3>
 
-<p>In order to give you an idea of flexible KanaKanaK can be here are some examples of the ways it cen generate selectors.</p>
-
-<div class="highlight highlight-html"><pre><span class="nt">&lt;div</span><span class="nt">&gt;</span>
-    <span class="c1">//...</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">align=</span><span class="s">"left"</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
-    <span class="nt">&lt;br/&gt;</span>
-    <span class="nt">&lt;span&gt;&lt;/span&gt;</span>
-    <span class="nt">&lt;img <span class="na">src=</span><span class="s">"/assets/me.png"</span> /&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</pre></div>
-
-<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">myElement</span> <span class="o">=</span> <span class="nb">$</span><span class="p">(</span><span class="s2">"div[align=left]"</span><span class="p">);</span>
-<span class="c1">// prints "IMG[src="/assets/me.png"]"</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">KanakanaK</span><span class="p">(</span><span class="nx"><span class="nb">$</span><span class="p">(<span class="s2">"img"</span>,</span><span class="nb">myElement</span><span class="p">)</span></span><span class="p">[<span class="mi">0</span>]));</span>
-<span class="c1">// prints "DIV[align='left'] > SPAN:nth-child(3)"</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">KanakanaK</span><span class="p">(</span><span class="nx"><span class="nb">$</span><span class="p">(<span class="s2">"span"</span>,</span><span class="nb">myElement</span><span class="p">)</span></span><span class="p">[<span class="mi">1</span>]));</span>
-</pre></div>
-
-          <h3>
-<a name="configurations" class="anchor" href="#configurations"><span class="octicon octicon-link"></span></a>Configurations</h3>
-
-<p>The global KanakanaK variable has a method called "configuration" which can be used in two way:
+<p>The global Simmer variable has a method called "configuration" which can be used in two way:
 1. Simple calling it will return an object which contains the current configuration values:</p>
 
-<div class="highlight highlight-js"><pre>    <span class="c1">// calling</span>
-    <span class="nx">KanakanaK</span><span class="p">.</span><span class="nx">configuration</span><span class="p">();</span>
+<div class="highlight highlight-js"><pre>    <span class="pl-c">// calling</span>
+    Simmer.configuration();
 
-    <span class="c1">//returns the object:</span>
-    <span class="p">{</span>
-        <span class="nx">depth</span>   <span class="o">:</span><span class="mi">3</span><span class="p">,</span>
-        <span class="nx">specificityThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
-        <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">null</span><span class="p">,</span>
-        <span class="nx">errorHandling</span>    <span class="o">:</span><span class="kc">false</span><span class="p">,</span>
-        <span class="nx">selectorMaxLength</span><span class="o">:</span><span class="mi">512</span>
-    <span class="p">}</span>
-</pre></div>
+    <span class="pl-c">//returns the object:</span>
+    {
+        depth   <span class="pl-k">:</span><span class="pl-c1">3</span>,
+        specifictyThreshold<span class="pl-k">:</span><span class="pl-c1">100</span>,
+        queryEngine <span class="pl-k">:</span><span class="pl-c1">null</span>,
+        errorHandling    <span class="pl-k">:</span><span class="pl-c1">false</span>,
+        selectorMaxLength<span class="pl-k">:</span><span class="pl-c1">512</span>
+    }</pre></div>
 
 <ol>
 <li> Calling it with an object as a parameter allows you to replace the current configured values with new ones:</li>
-</ol><div class="highlight highlight-js"><pre>    <span class="c1">// calling</span>
-    <span class="nx">KanakanaK</span><span class="p">.</span><span class="nx">configuration</span><span class="p">({</span>
-        <span class="nx">depth</span>   <span class="o">:</span><span class="mi">5</span>
-    <span class="p">});</span>
+</ol>
 
-    <span class="c1">//returns the object:</span>
-    <span class="p">{</span>
-        <span class="nx">depth</span>   <span class="o">:</span><span class="mi">5</span><span class="p">,</span>
-        <span class="nx">specificityThreshold</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span>
-        <span class="nx">queryEngine</span> <span class="o">:</span><span class="kc">null</span><span class="p">,</span>
-        <span class="nx">errorHandling</span>    <span class="o">:</span><span class="kc">false</span><span class="p">,</span>
-        <span class="nx">selectorMaxLength</span><span class="o">:</span><span class="mi">512</span>
-    <span class="p">}</span>
-</pre></div>
+<div class="highlight highlight-js"><pre>    <span class="pl-c">// calling</span>
+    Simmer.configuration({
+        depth   <span class="pl-k">:</span><span class="pl-c1">5</span>
+    });
+
+    <span class="pl-c">//returns the object:</span>
+    {
+        depth   <span class="pl-k">:</span><span class="pl-c1">5</span>,
+        specifictyThreshold<span class="pl-k">:</span><span class="pl-c1">100</span>,
+        queryEngine <span class="pl-k">:</span><span class="pl-c1">null</span>,
+        errorHandling    <span class="pl-k">:</span><span class="pl-c1">false</span>,
+        selectorMaxLength<span class="pl-k">:</span><span class="pl-c1">512</span>
+    }</pre></div>
 
 <p>These are the different configuration options:</p>
 
 <ul>
 <li>
-    <span class="list-title">depth</span> - How deep into the DOM hierarchy should KanakanaK go in order to reach a unique selector. This is a delicate game because the higher the number the more likely you are to reach a unique selector, but it also means a longer and more breakable one. Assuming you want to store this selector to use later, making it longer also means it is more likely to change and loose it's validity.
+<code>depth</code> - How deep into the DOM hierarchy should Simmer go in order to reach a unique selector. This is a delicate game because the higher the number the more likely you are to reach a unique selector, but it also means a longer and more breakable one. Assuming you want to store this selector to use later, making it longer also means it is more likely to change and loose it's validity.</li>
+<li>
+<code>specifictyThreshold</code> - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: <a href="http://www.w3.org/TR/css3-selectors/#specificity">http://www.w3.org/TR/css3-selectors/#specificity</a>
 </li>
 <li>
-    <span class="list-title">queryEngine</span> - In order to calculate the CSS selector for an element KanaKanaK needs to test the various match selectors that it generates by actually running the query. By default KanaKanaK looks for known query engines on the current page (jQuery and Sizzle for now) to use and if it can't find one of those engines it tries to use Document's querySelectorAll method. If you wish to provide KanaKanaK with a query engine of your own choosing all you have to do is provide this queryEngine config parameter as a function which receives a string selector and return the corresponding array of elements.
-    For example, to add support for an external library:
-</li>
+<code>errorHandling</code> - How to handle errors which occur during the analysis? The default is 'silent'. There are three possible values: 1) 'silent' which means nothing happens. The error is ignored and Simmer continues as usual. 2) 'verbose' which means the error will be thrown and has to be caught by the calling code. 3) A callback function which will be called with the error object as a first parameter and the element being parsed as second parameter.</li>
+<li>
+<code>selectorMaxLength</code> - A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length then it is treated as if no selector could be found. By default 512 characters.</li>
 </ul>
 
-  <div class="highlight highlight-js">
-<pre>
-<span class="c1">// callback to bridge a query to an external library</span>
-<span class="kd">var</span> <span class="nb">queryUsingTheElmQLibrary</span> <span class="o">=</span> <span class="nx">function</span><span class="p">(</span><span class="mi">selectorMatchString</span><span class="p">){</span>
-<span class="c1">   //the query method receives a string selector and</span>
-<span class="c1">   //returns an array of elements which match the selector</span>
-<span class="p">    return <span class="nb">ElmQ</span>.query(<span class="mi">selectorMatchString</span>);</span>
-<span class="p">};</span>
-<span class="c1">//The configuration object to pass to the KanaKanaK object</span>
-<span class="p">{</span>
-<span class="c1">//....</span>
-    <span class="nx">queryEngine</span> <span class="o">:</span><span class="nb">queryUsingTheElmQLibrary</span><span class="p">,</span>
-<span class="p">}</span>
-</pre>
-  </div>
-<ul>
-<li>
-<span class="list-title">specificityThreshold</span> - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: <a href="http://www.w3.org/TR/css3-selectors/#specificity">http://www.w3.org/TR/css3-selectors/#specificity</a>
-</li>
-<li>
-<span class="list-title">errorHandling</span> - How to handle errors which occur during the analysis? The default is 'silent'. There are three possible values:
-    <ol>
-        <li><span class="list-title">silent</span> which means nothing happens. The error is ignored and KanakanaK continues as usual.</li>
-        <li><span class="list-title">verbose</span> which means the error will be thrown and has to be caught by the calling code.</li>
-        <li>A <span class="list-title">callback function</span> which will be called with the error object as a first parameter and the element being parsed as second parameter.</li>
-    </ol>
-</li>
-<li>
-<span class="list-title">selectorMaxLength</span> - A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length then it is treated as if no selector could be found. By default 512 characters.</li>
-</ul><h3>
-<a name="conflict" class="anchor" href="#conflict"><span class="octicon octicon-link"></span></a>Conflict</h3>
+<h3>
+<a id="conflict" class="anchor" href="#conflict" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conflict</h3>
 
-<p>Just in case you also had the brilliant idea of using a variable called "KanakanaK", or you wish to move it off of the global object then you can use the noConflict method to receive a reference to the object and remove it from the window.
-Calling it will also revert the original value of window.KanakanaK which was there before loading the KanakanaK.js script (if there was one)</p>
+<p>Just in case you also had the brilliant idea of using a variable called "Simmer", or you wish to move it off of the global object then you can use the noConflict method to receive a reference to the object and remove it from the window.
+Calling it will also revert the original value of window.Simmer which was there before loading the simmer.js script (if there was one)</p>
 
-<div class="highlight highlight-js"><pre>    <span class="kd">var</span> <span class="nx">myKanak</span> <span class="o">=</span> <span class="nx">KanakanaK</span><span class="p">.</span><span class="nx">noConflict</span><span class="p">();</span>
-    <span class="nx">myKanak</span><span class="p">(</span><span class="nx">myElm</span><span class="p">);</span>
-</pre></div>
-      </section>
-    </div>
+<div class="highlight highlight-js"><pre>    <span class="pl-k">var</span> mySimmer <span class="pl-k">=</span> Simmer.noConflict();
+    mySimmer(myElm);</pre></div>
 
-              <script type="text/javascript">
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/gmmorris/simmerjs">Simmer</a> is maintained by <a href="https://github.com/gmmorris">gmmorris</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+            <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -177,3 +120,4 @@ Calling it will also revert the original value of window.KanakanaK which was the
 
   </body>
 </html>
+
