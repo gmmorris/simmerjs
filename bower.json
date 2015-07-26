@@ -1,6 +1,6 @@
 {
     "name": "simmer",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "main": "simmer.js",
     "devDependencies": {
         "qunit" : "~1.14.0",
