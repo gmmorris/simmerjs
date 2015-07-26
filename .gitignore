@@ -27,3 +27,4 @@ out/
 # files created by the build process and the "node install" command
 node_modules/*
 bower_components/*
+test/compiled/*

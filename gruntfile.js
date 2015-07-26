@@ -19,7 +19,10 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     urls: [
-                        'http://localhost:8000/test/index.html'
+                        'http://localhost:8000/test/compiled/qsa.test.html',
+                        'http://localhost:8000/test/compiled/jquery-legacy.test.html',
+                        'http://localhost:8000/test/compiled/jquery.test.html',
+                        'http://localhost:8000/test/compiled/sizzle.test.html'
                     ]
                 }
             }
@@ -51,9 +54,44 @@ module.exports = function (grunt) {
                     base: '.'
                 }
             }
+        },
+        includes: {
+            tests: {
+                options: {
+                    duplicates: false,
+                    debug: true,
+                    banner : ''
+                },
+                files: [
+                    // querySelectorAll
+                    {
+                        cwd: 'test/',
+                        src: 'qsa.test.html',
+                        dest: 'test/compiled/qsa.test.html'
+                    },
+                    // jquery legacy
+                    {
+                        cwd: 'test/',
+                        src: 'jquery-legacy.test.html',
+                        dest: 'test/compiled/jquery-legacy.test.html'
+                    },
+                    // jquery
+                    {
+                        cwd: 'test/',
+                        src: 'jquery.test.html',
+                        dest: 'test/compiled/jquery.test.html'
+                    },
+                    // sizzle
+                    {
+                        cwd: 'test/',
+                        src: 'sizzle.test.html',
+                        dest: 'test/compiled/sizzle.test.html'
+                    }
+                ],
+            },
         }
     });
 
-    grunt.registerTask('test', ['bower:install','jshint', 'connect', 'qunit']);
+    grunt.registerTask('test', ['bower:install','jshint', 'includes:tests', 'connect', 'qunit']);
     grunt.registerTask('tdd', ['watch']);
 };

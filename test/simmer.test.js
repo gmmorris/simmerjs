@@ -4,17 +4,11 @@
  * @version 0.0.1
  */
 
-
-// add a global accessor for jQuery so that applyDom() will
-// keep working even with jQuery hidden
-var $$ = window.jQuery;
-var $$Sizzle = window.Sizzle;
-
 // helper method
 var compareElementsAndSimmer = function (elementSelector, parentOfSelected) {
     var element;
     if (typeof(elementSelector) == 'string') {
-        element = $$Sizzle(elementSelector)[0];
+        element = $$(elementSelector)[0];
         if (parentOfSelected) {
             element = element.parentNode;
         }
@@ -23,7 +17,10 @@ var compareElementsAndSimmer = function (elementSelector, parentOfSelected) {
     }
 
     if (!element) {
-        return {el:undefined, SimmerEl:false};
+        return {
+            el:undefined,
+            SimmerEl:false
+        };
     }
 
     var selector = Simmer(element);
@@ -32,11 +29,14 @@ var compareElementsAndSimmer = function (elementSelector, parentOfSelected) {
         return selector;
     }
 
-    var returnedFromSimmerSelector = $$Sizzle(selector)[0];
+    var returnedFromSimmerSelector = $$(selector)[0];
 
 //    log((parentOfSelected ? 'PARENT OF: ' + elementSelector : elementSelector), selector);
 
-    return {el:element, SimmerEl:returnedFromSimmerSelector, selector:selector};
+    return {
+        el:element,
+        SimmerEl:returnedFromSimmerSelector, selector:selector
+    };
 };
 
 var log = function(from, to) {
@@ -57,8 +57,6 @@ var log = function(from, to) {
 };
 
 $$(document).ready(function () {
-
-
     var domCache,
         applyDom = function () {
             if(!domCache){
@@ -80,7 +78,7 @@ $$(document).ready(function () {
      */
 
 
-    var executeTests = function(){
+    window.executeTests = function(){
 
 
         test('can analyze an element with an ID', function () {
@@ -312,68 +310,4 @@ $$(document).ready(function () {
             deepEqual(elements, false);
         });
     };
-
-    /**
-     * Execute the different modules
-     */
-
-    module("Simmer using Sizzle", {
-        setup: function() {
-            // hide jQuery from page, just incase
-            window.loadedjQuery = window.jQuery.noConflict();
-            $ = null;
-        },
-        teardown: function() {
-            // return jQuery to it's rightful place
-            $ = window.loadedjQuery;
-            window.jQuery = $;
-        }
-    });
-
-    executeTests();
-
-    module("Simmer using jQuery", {
-        setup: function() {
-            // hide Sizzle from page, just incase
-            window.loadedSizzle = Sizzle;
-            window.Sizzle = null;
-        },
-        teardown: function() {
-            // return Sizzle to it's rightful place
-            window.Sizzle = window.loadedSizzle;
-        }
-    });
-
-    executeTests();
-
-    module("Simmer using document.querySelectorAll", {
-        setup: function() {
-            // hide Sizzle from page, just incase
-            window.loadedSizzle = Sizzle;
-            window.Sizzle = null;
-
-            // hide jQuery from page, just incase
-            window.loadedjQuery = window.jQuery.noConflict();
-            window.$ = null;
-            window.jQuery = null;
-
-//
-//            // initialize Simmer to use Sizzle
-//            Simmer.configuration({
-//                depth:6,
-//                specifictyThreshold:50
-//            });
-        },
-        teardown: function() {
-            // return Sizzle to it's rightful place
-            window.Sizzle = window.loadedSizzle;
-            // return jQuery to it's rightful place
-            $ = window.loadedjQuery;
-            window.jQuery = $;
-        }
-    });
-
-    executeTests();
-
-
 })

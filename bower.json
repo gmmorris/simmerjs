@@ -4,7 +4,8 @@
     "main": "simmer.js",
     "devDependencies": {
         "qunit" : "~1.14.0",
-        "jquery" : "1.11.0",
+        "jquery" : "latest",
+        "jquery-legacy" : "jquery#1.11.0",
         "sizzle" : "1.10.18"
     },
     "ignore": ["test", ".html"],

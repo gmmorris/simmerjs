@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>QUnit Simmer test</title>
+
+    <link rel="stylesheet" href="../../bower_components/qunit/qunit/qunit.css" type="text/css"/>
+
+    <script type="text/javascript" src="../../bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript">
+        // emove jQuery from window, we want it for our own setup
+        // but the Simmer library cannot see it
+        window.$$ = $.noConflict(true);
+    </script>
+
+    <script type="text/javascript" src="../../simmer.js"></script>
+
+    <script type="text/javascript" src="../../bower_components/qunit/qunit/qunit.js"></script>
+    <script type="text/javascript" src="../simmer.test.js"></script>
+    <script type="text/javascript" src="../qsa.test.js"></script>
+</head>
+<body>
+<div id="qunit"></div>
+<!-- QUnit fills this with results, etc -->
+<div id='qunit-fixture'>
+    include "fixture.html"
+</div>
+</body>
+</html>
