@@ -9,7 +9,7 @@ module.exports = function (grunt) {
 		bower: {
 			install: {
 				options: {
-					targetDir: 'libraries',
+					targetDir: 'bower_components',
 					layout: 'byComponent'
 				}
 			}
