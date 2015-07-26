@@ -647,8 +647,8 @@
       var queue = [
         parsingLogic.analyzeElementID,
         parsingLogic.analyzeElementAttributes,
-        parsingLogic.analyzeElementTag,
         parsingLogic.analyzeElementCSSClasses,
+        parsingLogic.analyzeElementTag,
         /* the nth-child selector has proven unreliable on badly built webpages. It breaks when one of the siblings has a non closed <br>, for example  */
         parsingLogic.analyzeElementSiblings
       ];
