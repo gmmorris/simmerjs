@@ -1,9 +1,9 @@
-/* jshint -W080 */
+/*global window, document */
 /** Simmer
  * @author Gidi Morris, 2014
  * @version 0.2.0
  */
-(function (window, document) {
+(function (window, document, undefined) {
   'use strict';
 
   var
@@ -406,23 +406,23 @@
           attribute;
 
         switch (tag) {
-         case 'A':
-            attribute = elm.attr('href');
-            if (attribute) {
-              state.stack[0].push('A[href="' + attribute + '"]');
-              state.specificity += 10;
-            }
-            break;
-          case 'IMG':
-            attribute = elm.attr('src');
-            if (attribute) {
-              state.stack[0].push('IMG[src="' + attribute + '"]');
-              state.specificity += 10;
-            }
-            break;
-          default:
+        case 'A':
+          attribute = elm.attr('href');
+          if (attribute) {
+            state.stack[0].push('A[href="' + attribute + '"]');
+            state.specificity += 10;
+          }
+          break;
+        case 'IMG':
+          attribute = elm.attr('src');
+          if (attribute) {
+            state.stack[0].push('IMG[src="' + attribute + '"]');
+            state.specificity += 10;
+          }
+          break;
+        default:
             // nothing to do here
-            return state;
+          return state;
         }
 
         if (analyzeSelectorState(hierarchy[0], state, config.selectorMaxLength)) {
@@ -441,16 +441,16 @@
        * @param {array} hierarchy. The hierarchy of elements
        * @param {object} state. The current calculated CSS selector
        */
-      analyzeElementCSSClasses: function (hierarchy, state, config) {
-
-        for (var index = 0; index < hierarchy.length; index += 1) {
-          var currentElem = hierarchy[index];
+      analyzeElementCSSClasses: function (hierarchy, state) {
+        var index, classIndex, currentElem, currentClasses, classes;
+        for (index = 0; index < hierarchy.length; index += 1) {
+          currentElem = hierarchy[index];
           // get class attribute
-          var currentClasses = currentElem.attr('class');
+          currentClasses = currentElem.attr('class');
           if (currentClasses && typeof currentClasses === 'string') {
             // trim spaces
             currentClasses = currentClasses.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-            var classes = currentClasses.match(/([^\s]+)/gi);
+            classes = currentClasses.match(/([^\s]+)/gi);
             if (classes) {
               if (classes.length > 0) {
                 // add . before the first class
@@ -460,7 +460,7 @@
               if (classes.length > 10) {
                 classes.splice(10, classes.length - 10);
               }
-              for (var classIndex = 0; classIndex < classes.length; classIndex += 1) {
+              for (classIndex = 0; classIndex < classes.length; classIndex += 1) {
                 if (!this.validationHelpers.className(classes[classIndex])) {
                   classes.splice(classIndex, 1);
                 }
@@ -479,15 +479,16 @@
        * @param {object} state. The current calculated CSS selector
        */
       analyzeElementSiblings: function (hierarchy, state, config) {
-
-        var hierarchyIndex = 0;
+        var index, hierarchyIndex = 0, siblings, indexOfElement,
+          elementTag, elementClasses, hasUniqueTag, hasUniqueClass,
+          currentElem, currentTag;
         while (hierarchyIndex < hierarchy.length && !state.verified) {
           // get siblings BEFORE out element
-          var siblings = hierarchy[hierarchyIndex].prevAll();
+          siblings = hierarchy[hierarchyIndex].prevAll();
 
           // get element's index by the number of elements before it
           // note that the nth-child selector uses a 1 based index, not 0
-          var indexOfElement = siblings.length + 1;
+          indexOfElement = siblings.length + 1;
 
           // add the rest of the siblings (those that come after ours)
           siblings = siblings.concat(hierarchy[hierarchyIndex].nextAll());
@@ -495,15 +496,15 @@
           // If the element has no siblings!
           // we have no need for the nth-child selector
           if (siblings.length !== 0) {
-            var elementTag = hierarchy[hierarchyIndex].getTag();
-            var elementClasses = hierarchy[hierarchyIndex].getClasses();
-            var hasUniqueTag = true; // assume unique until proven otherwise
-            var hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0); // if the element has no class, we may still need the nth-child filter
+            elementTag = hierarchy[hierarchyIndex].getTag();
+            elementClasses = hierarchy[hierarchyIndex].getClasses();
+            hasUniqueTag = true; // assume unique until proven otherwise
+            hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0); // if the element has no class, we may still need the nth-child filter
 
-            for (var index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
-              var currentElem = siblings[index];
+            for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
+              currentElem = siblings[index];
               // nodeName is not a jQuery property, so we must go directly to the element
-              var currentTag = currentElem.getTag();
+              currentTag = currentElem.getTag();
               if (currentTag && currentTag === elementTag) {
                 hasUniqueTag = false;
               }
@@ -511,7 +512,6 @@
               // get the classes that exist on the element but not on his sibling
               hasUniqueClass = (_.difference(elementClasses, currentElem.getClasses()).length > 0);
             }
-
 
             // if we don't have a unique tag or a unique class, then we need a nth-child to help us
             // differenciate our element from the rest of the pack
@@ -537,12 +537,15 @@
        */
       analyzeTypedSiblings: function (hierarchy, state, config) {
 
-        var hierarchyIndex = 0;
+        var index, hierarchyIndex = 0,
+          siblings, indexOfElement,
+          currentElem, currentTag,
+          elementTag, elementClasses, siblingClasses, hasUniqueTag, hasUniqueClass, uniqueClasses, typedIndex;
         while (hierarchyIndex < hierarchy.length && !state.verified) {
           // get siblings BEFORE out element and reverse
-          var siblings = hierarchy[hierarchyIndex].prevAll().reverse();
+          siblings = hierarchy[hierarchyIndex].prevAll().reverse();
 
-          var indexOfElement = siblings.length;
+          indexOfElement = siblings.length;
 
           // add the rest of the siblings (those that come after ours)
           siblings = siblings.concat(hierarchy[hierarchyIndex].nextAll());
@@ -550,17 +553,17 @@
           // If the element has no siblings!
           // we have no need for the nth-child selector
           if (siblings.length !== 0) {
-            var elementTag = hierarchy[hierarchyIndex].getTag();
-            var elementClasses = hierarchy[hierarchyIndex].getClasses();
-            var siblingClasses = [];
-            var hasUniqueTag = true; // assume unique until proven otherwise
-            var hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0); // if the element has no class, we may still need the nth-child filter
-            var typedIndex = 1; // the nth-of-type index of the element
+            elementTag = hierarchy[hierarchyIndex].getTag();
+            elementClasses = hierarchy[hierarchyIndex].getClasses();
+            siblingClasses = [];
+            hasUniqueTag = true; // assume unique until proven otherwise
+            hasUniqueClass = (elementClasses[0] instanceof Array && elementClasses[0].length > 0); // if the element has no class, we may still need the nth-child filter
+            typedIndex = 1; // the nth-of-type index of the element
 
-            for (var index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
-              var currentElem = siblings[index];
+            for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
+              currentElem = siblings[index];
               // nodeName is not a jQuery property, so we must go directly to the element
-              var currentTag = currentElem.getTag();
+              currentTag = currentElem.getTag();
               if (currentTag && currentTag === elementTag) {
                 if (index < indexOfElement) {
                   //only increment count if we have yet to reach the element
@@ -579,7 +582,7 @@
             }
 
             // get the classes that exist on the element but not on his siblings
-            var uniqueClasses = _.difference(elementClasses, siblingClasses);
+            uniqueClasses = _.difference(elementClasses, siblingClasses);
             hasUniqueClass = (uniqueClasses.length > 0);
 
             // if we don't have a unique tag or a unique class, then we need a nth-child to help us
@@ -635,7 +638,7 @@
         }
       }
     },
-    Parser = function(){
+    Parser = function () {
       /*
        Currently we have disabled the 'analyzeTypedSiblings' method.
        the nth-of-type selector has been removed due to the fact that
@@ -649,13 +652,13 @@
         /* the nth-child selector has proven unreliable on badly built webpages. It breaks when one of the siblings has a non closed <br>, for example  */
         parsingLogic.analyzeElementSiblings
       ];
-      this.next = function(hierarchy, selectorState, config){
-        if(this.finished()){
+      this.next = function (hierarchy, selectorState, config) {
+        if (this.finished()) {
           return false;
         }
-        return queue.shift().call(parsingLogic,hierarchy, selectorState, config);
+        return queue.shift().call(parsingLogic, hierarchy, selectorState, config);
       };
-      this.finished = function(hierarchy, selectorState, config){
+      this.finished = function () {
         return queue.length === 0;
       };
     };
@@ -687,7 +690,10 @@
         // follow the current specificity level of the selector - the higher the better
         'specificity': 0
       },
-      index;
+      index,
+      // The parser cycled through a set of parsing methods specified in an order optimal
+      // for creating as specific as possible a selector
+      parser = new Parser();
 
     // for each level we create a private stack of properties, so that we can then merge them
     // comfortably and allow all methods to see the level at which existing properties have
@@ -696,9 +702,6 @@
       selectorState.stack[index] = [];
     }
 
-    // The parser cycled through a set of parsing methods specified in an order optimal
-    // for creating as specific as possible a selector
-    var parser = new Parser();
 
     // cycle through the available parsing methods and while we still have yet to find the requested element's one-to-one selector
     // we keep calling the methods until we are either satisfied or run out of methods
