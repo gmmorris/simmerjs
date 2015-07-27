@@ -1,17 +1,17 @@
-/*globals window, document, $$, module, test */
+/*globals window, document, $$, QUnit, module, test, notEqual, equal, deepEqual, ok */
 /**
  * @name TEST Simmer.js
  * @author Gidi Morris (c) 2014
  * @version 0.0.1
  */
-(function (window,document,undefined) {
+(function (window, document, undefined) {
   'use strict';
 
   // helper method
   var compareElementsAndSimmer = function (elementSelector, parentOfSelected) {
     var element, selector;
     if (typeof elementSelector === 'string') {
-      element = $$(elementSelector)[0];
+      element = document.querySelectorAll(elementSelector)[0];
       if (parentOfSelected) {
         element = element.parentNode;
       }
@@ -38,14 +38,15 @@
       selector: selector
     };
   },
-  domCache = null,
-  applyDom = function () {
-    if (!domCache) {
-      domCache = $$('#fixture').clone();
-    }
-    $$('#fixture').remove();
-    $$('body').append(domCache.clone());
-  };
+    domCache = null,
+    applyDom = function () {
+      if (!domCache) {
+        domCache = document.querySelectorAll('#fixture')[0].cloneNode(true);
+      }
+      var fixture = document.querySelectorAll('#fixture')[0];
+      fixture.parentNode.removeChild(fixture);
+      document.body.appendChild(domCache.cloneNode(true));
+    };
 
   // run first time
   applyDom();
@@ -195,9 +196,9 @@
     });
 
     test('cannot parse an element with an identical hierarchy whithin the Simmer\'s default configured depth', function () {
-      var placeHolder = $$('#placeholderId');
+      var placeHolder = $$('#placeholderId'), elements;
       placeHolder.removeAttr('id');
-      var elements = compareElementsAndSimmer(placeHolder[0]);
+      elements = compareElementsAndSimmer(placeHolder[0]);
       notEqual(elements, undefined);
       deepEqual(elements, false);
     });
@@ -229,27 +230,7 @@
       // make sure the selector is one level deep
       equal(elements.selector.split('>').length, 2);
     });
-
-    test('can analyze an element with a valid ID that has only numbers in it\'s ID', function () {
-      var elements = compareElementsAndSimmer('#111');
-      notEqual(elements, undefined);
-      notEqual(elements.SimmerEl, undefined);
-      notEqual(elements.el, undefined);
-      equal(elements.el, elements.SimmerEl);
-      // make sure the selector is one level deep
-      ok(elements.selector.match('111'), "expected ID 111 as selector");
-    });
-
-    test('can analyze an element with a valid ID that has numbers and then letters in it\'s ID', function () {
-      var elements = compareElementsAndSimmer('#111aaaaaa');
-      notEqual(elements, undefined);
-      notEqual(elements.SimmerEl, undefined);
-      notEqual(elements.el, undefined);
-      equal(elements.el, elements.SimmerEl);
-      // make sure the selector is one level deep
-      ok(elements.selector.match('111aaaaaa'), "expected ID 111aaaaaa as selector");
-    });
-
+    
     test('can analyze an element with a valid ID that ends with numbers in it\'s ID', function () {
       var elements = compareElementsAndSimmer('#a111');
       notEqual(elements, undefined);
@@ -281,10 +262,10 @@
     });
 
     test('can\'t analyze an element which is longer than the selectorMaxLength chars', function () {
-      var placeHolder = $$('#aZROCRDPX41Qkden3aiC3o9Tkl0xqENUjIgNSWbe6pSddw86ogN018T9lD67zAF1YHaLkRngy8YVq88IBfqdvtO9aXZZbD1NsSBiUo6txcv22ufrkRs9AZKkxIkTF1gNAZ3Oh4M6TcYWRARVJqOZwo3dQufTDm904ep3yHZ5vdHqIyFqTFdZYPWYumx5gJBmWn7GbZQ3O3HodzmHYIHhCYg4dCDfSN8iCHzezerdHbzWUKR7pzMDOzvq017a63LSqYkSJ0gWxrgJFj45HR25eJj5szEFmuQlCfkbWpCwYopeNhy1toC9PvSfVCnHpI7EXeqVcspP0aQISflgD0pBMgg2ieITRa5gXRnKoDdem1yXvHjcDBXJFoUy63zDwg6tTtRR6rijcvoxNzGjWCgQhdqzlv6CW2CVgK2aa0VSX9RMSUTSKXmru7mvZUXJxv7RO7n1Zw9meFygwHwgNrZgeRWVYhsXBtEG8Bak7sPQ7x37QXgIgbJRcbhqMK2F5baa');
-      var elements = compareElementsAndSimmer(placeHolder[0]);
+      var placeHolder = $$('#aZROCRDPX41Qkden3aiC3o9Tkl0xqENUjIgNSWbe6pSddw86ogN018T9lD67zAF1YHaLkRngy8YVq88IBfqdvtO9aXZZbD1NsSBiUo6txcv22ufrkRs9AZKkxIkTF1gNAZ3Oh4M6TcYWRARVJqOZwo3dQufTDm904ep3yHZ5vdHqIyFqTFdZYPWYumx5gJBmWn7GbZQ3O3HodzmHYIHhCYg4dCDfSN8iCHzezerdHbzWUKR7pzMDOzvq017a63LSqYkSJ0gWxrgJFj45HR25eJj5szEFmuQlCfkbWpCwYopeNhy1toC9PvSfVCnHpI7EXeqVcspP0aQISflgD0pBMgg2ieITRa5gXRnKoDdem1yXvHjcDBXJFoUy63zDwg6tTtRR6rijcvoxNzGjWCgQhdqzlv6CW2CVgK2aa0VSX9RMSUTSKXmru7mvZUXJxv7RO7n1Zw9meFygwHwgNrZgeRWVYhsXBtEG8Bak7sPQ7x37QXgIgbJRcbhqMK2F5baa'),
+        elements = compareElementsAndSimmer(placeHolder[0]);
       notEqual(elements, undefined);
       deepEqual(elements, false);
     });
   };
-})(window,document);
+})(window, document);
