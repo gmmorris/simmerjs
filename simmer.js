@@ -3,7 +3,7 @@
  * @author Gidi Morris, 2014
  * @version 0.2.0
  */
-(function (window, document, undefined) {
+(function (window, _, QueryEngine, undefined) {
   'use strict';
 
   var
@@ -53,215 +53,7 @@
         config.errorHandling(ex, element);
       }
     },
-    /**
-     * Internal generic helper functions
-     * */
-      // Functions borrowed from underscore.js with all the respect in the world
-    _ = {
-      breaker: {},
-      contains: function (obj, target) {
-        var found = false;
-
-        if (obj === null) {
-          return found;
-        }
-
-        if (obj instanceof Array) {
-          return obj.indexOf(target) !== -1;
-        }
-
-        found = this.any(obj, function (value) {
-          return value === target;
-        });
-        return found;
-      },
-      any: function (obj, iterator, context) {
-        iterator = iterator || _.identity;
-        var result = false;
-        if (obj === null) {
-          return result;
-        }
-        if (obj instanceof Array) {
-          return obj.some(iterator, context);
-        }
-        this.each(obj, function (value, index, list) {
-          result = result || iterator.call(context, value, index, list);
-          var itr = result;
-          if (itr) {
-            return this.breaker;
-          }
-        });
-        return !!result;
-      },
-      each: function (obj, iterator, context) {
-        var i, l, key;
-        if (obj === null) {
-          return;
-        }
-        if (obj instanceof Array) {
-          obj.forEach(iterator, context);
-        } else if (obj.length === +obj.length) {
-          for (i = 0, l = obj.length; i < l; i += 1) {
-            if (obj[i] !== undefined && iterator.call(context, obj[i], i, obj) === this.breaker) {
-              return;
-            }
-          }
-        } else {
-          for (key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              if (iterator.call(context, obj[key], key, obj) === this.breaker) {
-                return;
-              }
-            }
-          }
-        }
-      },
-      filter: function (obj, iterator, context) {
-        var results = [];
-        if (obj === null) {
-          return results;
-        }
-        if (obj instanceof Array) {
-          return obj.filter(iterator, context);
-        }
-        this.each(obj, function (value, index, list) {
-          if (iterator.call(context, value, index, list)) {
-            results[results.length] = value;
-          }
-        });
-        return results;
-      },
-      difference: function (array, other) {
-        return this.filter(array, function (value) {
-          return !this.contains(other, value);
-        }, this);
-      },
-      isFunction: function (obj) {
-        return !!(obj && obj.constructor && obj.call && obj.apply);
-      },
-      bind : function (func, context) {
-        var args;
-        if (!this.isFunction(func)) {
-          throw new TypeError('Bind must be called on a function');
-        }
-        if(Function.prototype && Function.prototype.bind) {
-          return func.bind.apply(func,Array.prototype.slice.call(arguments, 1));
-        }
-        args = Array.prototype.slice.call(arguments, 2);
-        return function () {
-          return func.apply(context, args.concat(Array.prototype.slice.call(arguments)));
-        };
-      }
-    },
-    /**
-     * A DOM manipulation object. Provides both CSS selector querying for verifications and a wrapper for the elements them selves to provide
-     * key behavioural methods, such as sibling querying etc.
-     * @param {object} elementOrSelector. An element we wish to wrapper or a CSS query string
-     */
-    $DOM = {
-      query: function (selector) {
-        if (typeof selector !== 'string') {
-          return false;
-        }
-
-        //selector library support
-        if (config.queryEngine && _.isFunction(config.queryEngine)) {
-          var result = config.queryEngine(selector);
-          if (typeof result === 'object' && result.length !== undefined) {
-            return result;
-          }
-          return [];
-        }
-        if (window.Sizzle) {
-          return window.Sizzle(selector);
-        }
-        if (window.jQuery) {
-          return window.jQuery(selector).toArray();
-        }
-        if (document && document.querySelectorAll && _.isFunction(document.querySelectorAll)) {
-          try {
-            return document.querySelectorAll(selector);
-          } catch (ex) {
-            // handle error
-            onError.call(Simmer, ex, null);
-          }
-        }
-        // No library nor methods to use, so return an empty array - no CSS selector will ever be generated in this situation!
-        return [];
-      },
-      /**
-       * Verify a specific ID's uniqueness one the page
-       * @param {object} element. The element we are trying to build a selector for
-       * @param {object} state. The current selector state (has the stack and specificity sum)
-       */
-      isUniqueElementID: function (elementID) {
-        // use selector to query an element and see if it is a one-to-one selection
-        var results = this.query('[id="' + elementID + '"]');
-        return (results.length === 1);
-      },
-      wrap: function (elm) {
-
-        /// When the DOM wrapper return the selected element it wrapps
-        /// it with helper methods which aid in analyzing the result
-        return {
-          el: elm,
-
-          attr: function (attribute) {
-            return this.el.getAttribute(attribute);
-          },
-
-          getTag: function () {
-            return this.el.nodeName;
-          },
-
-          getClass: function () {
-            var classValue = this.attr('class');
-            if (classValue) {
-              return classValue;
-            }
-            return '';
-          },
-
-          getClasses: function () {
-            var classValue = this.attr('class');
-            if (classValue && typeof classValue === 'string') {
-              // trim spaces
-              classValue = classValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
-              if (classValue !== '') {
-                return classValue.split(' ');
-              }
-            }
-            return [];
-          },
-
-          prevAll: function () {
-            return this.dir('previousSibling');
-          },
-
-          nextAll: function () {
-            return this.dir('nextSibling');
-          },
-
-          parent: function () {
-            var parent = this.el.parentNode;
-            return parent && parent.nodeType !== 11 ? $DOM.wrap(parent) : null;
-          },
-
-          dir: function (dir) {
-            var matched = [],
-              cur = this.el[dir];
-
-            while (cur && cur.nodeType !== 9) {
-              if (cur.nodeType === 1) {
-                matched.push($DOM.wrap(cur));
-              }
-              cur = cur[dir];
-            }
-            return matched;
-          }
-        };
-      }
-    },
+    $DOM = new QueryEngine(),
     /**
      * Retireve the element's ancestors up to the configured level.
      * This is an internal function and is not to be used from the outside (nor can it, it is private)
@@ -479,6 +271,12 @@
     return convertSelectorStateIntoCSSSelector(selectorState);
   };
 
+  // by calling attachQueryEngine (currently null) we're essencially telling Simmer to perform an initial
+  // search on the page for relevant libraries.
+  // If the user chooses to change the configuration we'll trigger this again, otherwise this check will
+  // already have been performed by the time the user wishes to use the library
+  $DOM.attachQueryEngine(config.queryEngine, onError, Simmer);
+
   // Current version of the library.
   Simmer.VERSION = '0.2.0';
 
@@ -506,7 +304,7 @@
    </pre></code>
    */
   Simmer.configuration = function (configValues) {
-    var key;
+    var key, resetQueryEngine;
 
     // If an object param is provided - replace the specific properties
     // it has set in the param with the equivalent property in the config
@@ -516,8 +314,15 @@
       for (key in configValues) {
         if (configValues.hasOwnProperty(key) && config.hasOwnProperty(key)) {
           config[key] = configValues[key];
+          if (key === 'queryEngine') {
+            resetQueryEngine = true;
+          }
         }
       }
+    }
+
+    if (resetQueryEngine) {
+      $DOM.attachQueryEngine(config.queryEngine, onError, Simmer);
     }
 
     // return the configuration object
@@ -826,4 +631,238 @@
   //  return state;
   //});
 
-})(window, document);
+})(window,
+  /**
+   * Internal generic helper functions
+   * ======
+   *
+   * */
+  /**
+   * =======================================================================
+   * Functions borrowed from underscore.js with all the respect in the world
+   * =======================================================================
+   * */
+  {
+    breaker: {},
+    contains: function (obj, target) {
+      var found = false;
+
+      if (obj === null) {
+        return found;
+      }
+
+      if (obj instanceof Array) {
+        return obj.indexOf(target) !== -1;
+      }
+
+      found = this.any(obj, function (value) {
+        return value === target;
+      });
+      return found;
+    },
+    any: function (obj, iterator, context) {
+      iterator = iterator || _.identity;
+      var result = false;
+      if (obj === null) {
+        return result;
+      }
+      if (obj instanceof Array) {
+        return obj.some(iterator, context);
+      }
+      this.each(obj, function (value, index, list) {
+        result = result || iterator.call(context, value, index, list);
+        var itr = result;
+        if (itr) {
+          return this.breaker;
+        }
+      });
+      return !!result;
+    },
+    each: function (obj, iterator, context) {
+      var i, l, key;
+      if (obj === null) {
+        return;
+      }
+      if (obj instanceof Array) {
+        obj.forEach(iterator, context);
+      } else if (obj.length === +obj.length) {
+        for (i = 0, l = obj.length; i < l; i += 1) {
+          if (obj[i] !== undefined && iterator.call(context, obj[i], i, obj) === this.breaker) {
+            return;
+          }
+        }
+      } else {
+        for (key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            if (iterator.call(context, obj[key], key, obj) === this.breaker) {
+              return;
+            }
+          }
+        }
+      }
+    },
+    filter: function (obj, iterator, context) {
+      var results = [];
+      if (obj === null) {
+        return results;
+      }
+      if (obj instanceof Array) {
+        return obj.filter(iterator, context);
+      }
+      this.each(obj, function (value, index, list) {
+        if (iterator.call(context, value, index, list)) {
+          results[results.length] = value;
+        }
+      });
+      return results;
+    },
+    difference: function (array, other) {
+      return this.filter(array, function (value) {
+        return !this.contains(other, value);
+      }, this);
+    },
+    isFunction: function (obj) {
+      return !!(obj && obj.constructor && obj.call && obj.apply);
+    },
+    bind : function (func, context) {
+      var args;
+      if (!this.isFunction(func)) {
+        throw new TypeError('Bind must be called on a function');
+      }
+      if(Function.prototype && Function.prototype.bind) {
+        return func.bind.apply(func,Array.prototype.slice.call(arguments, 1));
+      }
+      args = Array.prototype.slice.call(arguments, 2);
+      return function () {
+        return func.apply(context, args.concat(Array.prototype.slice.call(arguments)));
+      };
+    }
+  },
+  /**
+   * A DOM manipulation object. Provides both CSS selector querying for verifications and a wrapper for the elements them selves to provide
+   * key behavioural methods, such as sibling querying etc.
+   * @param {object} elementOrSelector. An element we wish to wrapper or a CSS query string
+   */
+  (function (domProto) {
+    'use strict';
+
+    var QueryEngine = function () {
+      //selector library support
+      this.attachQueryEngine = function (queryEngine, onError, Simmer) {
+        if (!(queryEngine && typeof queryEngine === 'function')) {
+          if (window.Sizzle) {
+            this.queryEngine = function (selector) {
+              try {
+                return window.Sizzle(selector);
+              } catch (ex) {
+                // handle error
+                onError.call(Simmer, ex, null);
+              }
+            };
+          } else if (window.jQuery) {
+            this.queryEngine = function (selector) {
+              try {
+                return window.jQuery(selector).toArray();
+              } catch (ex) {
+                // handle error
+                onError.call(Simmer, ex, null);
+              }
+            };
+          } else if (document && document.querySelectorAll && typeof document.querySelectorAll === 'function') {
+            this.queryEngine = function (selector) {
+              try {
+                return document.querySelectorAll(selector);
+              } catch (ex) {
+                // handle error
+                onError.call(Simmer, ex, null);
+              }
+            };
+          }
+        } else {
+          this.queryEngine = queryEngine;
+        }
+      };
+      this.query = function (selector) {
+        if (typeof selector !== 'string' || typeof this.queryEngine !== 'function') {
+          // No selctor, library nor methods to use, so return an empty array - no CSS selector will ever be generated in this situation!
+          return [];
+        }
+        return this.queryEngine(selector);
+      };
+    };
+    QueryEngine.prototype = domProto;
+    return QueryEngine;
+  })({
+    /**
+     * Verify a specific ID's uniqueness one the page
+     * @param {object} element. The element we are trying to build a selector for
+     * @param {object} state. The current selector state (has the stack and specificity sum)
+     */
+    isUniqueElementID: function (elementID) {
+      // use selector to query an element and see if it is a one-to-one selection
+      var results = this.query('[id="' + elementID + '"]');
+      return (results.length === 1);
+    },
+    wrap: function (elm) {
+      var $DOM= this;
+      /// When the DOM wrapper return the selected element it wrapps
+      /// it with helper methods which aid in analyzing the result
+      return {
+        el: elm,
+
+        attr: function (attribute) {
+          return this.el.getAttribute(attribute);
+        },
+
+        getTag: function () {
+          return this.el.nodeName;
+        },
+
+        getClass: function () {
+          var classValue = this.attr('class');
+          if (classValue) {
+            return classValue;
+          }
+          return '';
+        },
+
+        getClasses: function () {
+          var classValue = this.attr('class');
+          if (classValue && typeof classValue === 'string') {
+            // trim spaces
+            classValue = classValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+            if (classValue !== '') {
+              return classValue.split(' ');
+            }
+          }
+          return [];
+        },
+
+        prevAll: function () {
+          return this.dir('previousSibling');
+        },
+
+        nextAll: function () {
+          return this.dir('nextSibling');
+        },
+
+        parent: function () {
+          var parent = this.el.parentNode;
+          return parent && parent.nodeType !== 11 ? $DOM.wrap(parent) : null;
+        },
+
+        dir: function (dir) {
+          var matched = [],
+          cur = this.el[dir];
+
+          while (cur && cur.nodeType !== 9) {
+            if (cur.nodeType === 1) {
+              matched.push($DOM.wrap(cur));
+            }
+            cur = cur[dir];
+          }
+          return matched;
+        }
+      };
+    }
+  }));

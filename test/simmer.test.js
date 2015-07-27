@@ -230,7 +230,7 @@
       // make sure the selector is one level deep
       equal(elements.selector.split('>').length, 2);
     });
-    
+
     test('can analyze an element with a valid ID that ends with numbers in it\'s ID', function () {
       var elements = compareElementsAndSimmer('#a111');
       notEqual(elements, undefined);
