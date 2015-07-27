@@ -7,7 +7,7 @@
  * @version 0.0.1
  */
 
-$$(document).ready(function () {
+(function (window) {
 
     module("Simmer using Legacy jQuery 1.11.0", {
         setup: function() {
@@ -18,4 +18,4 @@ $$(document).ready(function () {
 
     window.executeTests();
 
-})
+})(window);

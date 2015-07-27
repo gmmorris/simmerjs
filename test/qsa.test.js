@@ -7,7 +7,7 @@
  * @version 0.0.1
  */
 
-$$(document).ready(function () {
+(function (window) {
 
     module("Simmer using document.querySelectorAll", {
         setup: function() {
@@ -18,4 +18,4 @@ $$(document).ready(function () {
 
     window.executeTests();
 
-})
+})(window);

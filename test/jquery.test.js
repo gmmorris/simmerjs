@@ -6,8 +6,7 @@
  * @author Gidi Morris (c) 2014
  * @version 0.0.1
  */
-
-$$(document).ready(function () {
+(function (window) {
 
     module("Simmer using modern jQuery 2.xx", {
         setup: function() {
@@ -18,4 +17,4 @@ $$(document).ready(function () {
 
     window.executeTests();
 
-})
+})(window);
