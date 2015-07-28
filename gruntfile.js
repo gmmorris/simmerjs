@@ -100,6 +100,6 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('test', ['bower:install', 'jshint', 'includes:tests', 'connect', 'qunit']);
+  grunt.registerTask('test', ['bower:install', 'jshint', 'plato', 'includes:tests', 'connect', 'qunit']);
   grunt.registerTask('tdd', ['watch']);
 };
