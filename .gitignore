@@ -28,3 +28,4 @@ out/
 node_modules/*
 bower_components/*
 test/compiled/*
+report/*
