@@ -661,7 +661,6 @@
       return found;
     },
     any: function (obj, iterator, context) {
-      iterator = iterator || _.identity;
       var result = false;
       if (obj === null) {
         return result;
