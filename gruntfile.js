@@ -90,6 +90,13 @@ module.exports = function (grunt) {
           }
         ],
       },
+    },
+    plato: {
+      report : {
+        files: {
+          'report' : ['simmer.js']
+        }
+      }
     }
   });
 
