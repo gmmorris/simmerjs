@@ -6,7 +6,7 @@ A pure Javascript reverse CSS selector engine which calculates a DOM element's u
 ### Basic usage
 
 To use Simmer to analyze an element and produce a unique CSS selector for it, all you have to do is call the global
-kanakanak variable as a function.
+Simmer variable as a function.
 
 
 ```html
@@ -25,7 +25,7 @@ console.log(Simmer(myElement)); // prints "#myUniqueElement"
 
 ### Configurations
 
-The global KanakanaK variable has a method called "configuration" which can be used in two way:
+The global Simmer variable has a method called "configuration" which can be used in two way:
 1. Simple calling it will return an object which contains the current configuration values:
 
 ```js
@@ -72,7 +72,7 @@ Just in case you also had the brilliant idea of using a variable called "Simmer"
 Calling it will also revert the original value of window.Simmer which was there before loading the Simmer.js script (if there was one)
 
 ```js
-    var myKanak = Simmer.noConflict();
-    myKanak(myElm);
+    var mySimmer = Simmer.noConflict();
+    mySimmer(myElm);
 ```
 
