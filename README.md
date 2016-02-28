@@ -79,4 +79,3 @@ Calling it will also revert the original value of window.Simmer which was there 
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gmmorris/simmerjs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

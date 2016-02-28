@@ -1,7 +1,4 @@
 languages:
-  Ruby: true
   JavaScript: true
-  PHP: true
-  Python: true
 exclude_paths:
-- "libraries/qunit/qunit.js"
+- "node_modules"

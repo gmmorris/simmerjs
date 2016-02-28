@@ -1,8 +1,14 @@
-language: javascript
-
+language: node_js
+node_js:
+    - "5.7.0"
 sudo: false
-
 install:
- - npm install
-
-script: grunt test
+    - npm install
+    - export DISPLAY=':99.0'
+    - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+script:
+    - npm test
+addons:
+    apt:
+        packages:
+            - xvfb
