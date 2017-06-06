@@ -3,12 +3,10 @@ import fixture from './fixture'
 import { queryEngine, NoResult, compareParentElementAndSimmer, compareElementsAndSimmer } from './utils'
 
 import installSimmer from '../../modules/simmer'
-import helpers from '../../modules/helpers'
 import initQueryEngine from '../../modules/queryEngine'
 
 const installSimmerOnWindow = windowScope => {
   installSimmer(windowScope,
-    helpers,
     initQueryEngine(windowScope)
   )
   return windowScope

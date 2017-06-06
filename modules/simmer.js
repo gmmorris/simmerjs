@@ -1,5 +1,6 @@
+import difference from 'lodash.difference'
 
-export default function (window, _, QueryEngine, undefined) {
+export default function (window, QueryEngine, undefined) {
   var
     /**
      * The top-level namespace
@@ -142,7 +143,7 @@ export default function (window, _, QueryEngine, undefined) {
       },
       addMethod : function (fn, context) {
         context = (context && typeof context === 'object' ? context : this);
-        this.methods.push(_.bind(fn, context));
+        this.methods.push(fn.bind(context));
       },
       // Internal functions for the parsing process
       validationHelpers: {
@@ -547,7 +548,7 @@ export default function (window, _, QueryEngine, undefined) {
         }
 
         // get the classes that exist on the element but not on his sibling
-        hasUniqueClass = (_.difference(elementClasses, currentElem.getClasses()).length > 0);
+        hasUniqueClass = (difference(elementClasses, currentElem.getClasses()).length > 0);
       }
 
       // if we don't have a unique tag or a unique class, then we need a nth-child to help us
@@ -610,7 +611,7 @@ export default function (window, _, QueryEngine, undefined) {
   //      }
   //
   //      // get the classes that exist on the element but not on his siblings
-  //      uniqueClasses = _.difference(elementClasses, siblingClasses);
+  //      uniqueClasses = difference(elementClasses, siblingClasses);
   //      hasUniqueClass = (uniqueClasses.length > 0);
   //
   //      // if we don't have a unique tag or a unique class, then we need a nth-child to help us
