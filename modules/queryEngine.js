@@ -15,11 +15,7 @@ export function wrap (el) {
   /// it with helper methods which aid in analyzing the result
   return {
     el,
-
-    getTag: function () {
-      return this.el.nodeName;
-    },
-
+    
     getClass: function () {
       var classValue = this.el.getAttribute('class');
       if (classValue) {

@@ -400,7 +400,7 @@ export default function (window, QueryEngine, undefined) {
     var index, currentElem, currentTag;
     for (index = 0; index < hierarchy.length; index += 1) {
       currentElem = hierarchy[index];
-      currentTag = this.validationHelpers.tagName(currentElem.getTag());
+      currentTag = this.validationHelpers.tagName(currentElem.el.nodeName);
 
       if (currentTag) {
         state.stack[index].splice(0, 0, currentTag);
@@ -418,7 +418,7 @@ export default function (window, QueryEngine, undefined) {
    */
   parsingMethods.addMethod(function (hierarchy, state, config) {
     var elm = hierarchy[0],
-      tag = elm.getTag(),
+      tag = elm.el.nodeName,
       attribute;
 
     switch (tag) {
@@ -540,7 +540,7 @@ export default function (window, QueryEngine, undefined) {
      */
     analyzeElementSiblings: function (siblingElement, siblings) {
       var index,
-        elementTag = siblingElement.getTag(),
+        elementTag = siblingElement.el.nodeName,
         elementClasses = siblingElement.getClasses(),
         // assume unique until proven otherwise
         hasUniqueTag = true,
@@ -552,7 +552,7 @@ export default function (window, QueryEngine, undefined) {
       for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
         currentElem = siblings[index];
         // nodeName is not a jQuery property, so we must go directly to the element
-        currentTag = currentElem.getTag();
+        currentTag = currentElem.el.nodeName;
         if (currentTag && currentTag === elementTag) {
           hasUniqueTag = false;
         }
@@ -592,7 +592,7 @@ export default function (window, QueryEngine, undefined) {
   //    // If the element has no siblings!
   //    // we have no need for the nth-child selector
   //    if (siblings.length !== 0) {
-  //      elementTag = hierarchy[hierarchyIndex].getTag();
+  //      elementTag = hierarchy[hierarchyIndex].el.nodeName;
   //      elementClasses = hierarchy[hierarchyIndex].getClasses();
   //      siblingClasses = [];
   //      hasUniqueTag = true; // assume unique until proven otherwise
@@ -602,7 +602,7 @@ export default function (window, QueryEngine, undefined) {
   //      for (index = 0; index < siblings.length && (hasUniqueClass || hasUniqueTag); index += 1) {
   //        currentElem = siblings[index];
   //        // nodeName is not a jQuery property, so we must go directly to the element
-  //        currentTag = currentElem.getTag();
+  //        currentTag = currentElem.el.nodeName;
   //        if (currentTag && currentTag === elementTag) {
   //          if (index < indexOfElement) {
   //            //only increment count if we have yet to reach the element
