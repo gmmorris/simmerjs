@@ -2,9 +2,9 @@ const { JSDOM } = require('jsdom')
 import fixture from './fixture'
 import { queryEngine, NoResult, compareParentElementAndSimmer, compareElementsAndSimmer } from './utils'
 
-import installSimmer from '../modules/simmer'
-import helpers from '../modules/helpers'
-import initQueryEngine, { domProto } from '../modules/queryEngine'
+import installSimmer from '../../modules/simmer'
+import helpers from '../../modules/helpers'
+import initQueryEngine, { domProto } from '../../modules/queryEngine'
 
 const installSimmerOnWindow = windowScope => {
   installSimmer(windowScope,
