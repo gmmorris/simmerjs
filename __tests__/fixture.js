@@ -1,5 +1,4 @@
-export const applyFixture = parentNode => {
-  parentNode.innerHTML = `
+export default `
   <div id="fixture" style="display:none">
       <div id="TopContainer">
           <div class="header"><span id="NavBar"> <ul>
@@ -77,4 +76,3 @@ export const applyFixture = parentNode => {
       </div>
   </div>
   `
-}
