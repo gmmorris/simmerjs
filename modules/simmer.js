@@ -1,4 +1,5 @@
 import difference from 'lodash.difference'
+import { wrap, isUniqueElementID } from './queryEngine'
 
 export default function (window, QueryEngine, undefined) {
   var
@@ -29,7 +30,7 @@ export default function (window, QueryEngine, undefined) {
       // false: errors are ignored by Simmer
       // true: errors rethrown by the process
       // a function callback will be called with two parameters: the exception and the element being analyzed
-      errorHandling: false,
+      errorHandling: e => { console.log({ e })},
       // A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length
       // then it is treated as if no selector could be found
       selectorMaxLength: 512
@@ -113,8 +114,12 @@ export default function (window, QueryEngine, undefined) {
       for (depth = 1; depth <= state.stack.length && !validated; depth += 1) {
         // use selector to query an element and see if it is a one-to-one selection
 
-        selector = convertSelectorStateIntoCSSSelector(state, depth);
+        selector = convertSelectorStateIntoCSSSelector(state, depth).trim();
 
+        if(!(selector && selector.length)) {
+          //too short
+          return false;
+        }
         if (selectorMaxLength && selector.length > selectorMaxLength) {
           // the selector is too long
           return false;
@@ -214,28 +219,31 @@ export default function (window, QueryEngine, undefined) {
       return false;
     }
 
+    
+    // The parser cycles through a set of parsing methods specified in an order optimal
+    // for creating as specific as possible a selector
+    const parser = new Parser();
+
     // get the element's ancestors (Note that $DOM isn't jQuery,  but rather a generic DOM wrapper)
-    var hierarchy = stackHierarchy($DOM.wrap(element), config.depth),
-      // initialize the state of the selector
-      selectorState = {
-        // the stack is used to build a layer of selectors, each layer coresponding to a specific element in the heirarchy
-        'stack': [],
-        // follow the current specificity level of the selector - the higher the better
-        'specificity': 0
-      },
-      index,
-      // The parser cycled through a set of parsing methods specified in an order optimal
-      // for creating as specific as possible a selector
-      parser = new Parser();
+    const hierarchy = stackHierarchy(
+      wrap(element),
+      config.depth
+    );
+
+    // initialize the state of the selector
+    let selectorState = {
+      // the stack is used to build a layer of selectors, each layer coresponding to a specific element in the heirarchy
+      'stack': [],
+      // follow the current specificity level of the selector - the higher the better
+      'specificity': 0
+    };
 
     // for each level we create a private stack of properties, so that we can then merge them
     // comfortably and allow all methods to see the level at which existing properties have
     // been set
-    for (index = 0; index < hierarchy.length; index += 1) {
+    for (let index = 0; index < hierarchy.length; index += 1) {
       selectorState.stack[index] = [];
     }
-
-
     // cycle through the available parsing methods and while we still have yet to find the requested element's one-to-one selector
     // we keep calling the methods until we are either satisfied or run out of methods
     while (!parser.finished() && !(selectorState.verified)) {
@@ -271,11 +279,13 @@ export default function (window, QueryEngine, undefined) {
     return convertSelectorStateIntoCSSSelector(selectorState);
   };
 
+
   // by calling attachQueryEngine (currently null) we're essencially telling Simmer to perform an initial
   // search on the page for relevant libraries.
   // If the user chooses to change the configuration we'll trigger this again, otherwise this check will
   // already have been performed by the time the user wishes to use the library
   $DOM.attachQueryEngine(config.queryEngine, onError, Simmer);
+
 
   // Current version of the library.
   Simmer.VERSION = '0.3.0';
@@ -350,7 +360,7 @@ export default function (window, QueryEngine, undefined) {
       currentElem = hierarchy[index];
       currentID = this.validationHelpers.attr(currentElem.attr('id'));
       // make sure the ID is unique
-      if (currentID && $DOM.isUniqueElementID(currentID)) {
+      if (currentID && isUniqueElementID($DOM, currentID)) {
 
         state.stack[index].push('[id=\'' + currentID + '\']');
         state.specificity += 100;
