@@ -358,7 +358,7 @@ export default function (window, QueryEngine, undefined) {
     var index, currentElem, currentID;
     for (index = 0; index < hierarchy.length && !state.verified; index += 1) {
       currentElem = hierarchy[index];
-      currentID = this.validationHelpers.attr(currentElem.attr('id'));
+      currentID = this.validationHelpers.attr(currentElem.el.getAttribute('id'));
       // make sure the ID is unique
       if (currentID && isUniqueElementID($DOM, currentID)) {
 
@@ -423,14 +423,14 @@ export default function (window, QueryEngine, undefined) {
 
     switch (tag) {
     case 'A':
-      attribute = elm.attr('href');
+      attribute = elm.el.getAttribute('href');
       if (attribute) {
         state.stack[0].push('A[href="' + attribute + '"]');
         state.specificity += 10;
       }
       break;
     case 'IMG':
-      attribute = elm.attr('src');
+      attribute = elm.el.getAttribute('src');
       if (attribute) {
         state.stack[0].push('IMG[src="' + attribute + '"]');
         state.specificity += 10;
@@ -463,7 +463,7 @@ export default function (window, QueryEngine, undefined) {
     for (index = 0; index < hierarchy.length; index += 1) {
       currentElem = hierarchy[index];
       // get class attribute
-      currentClasses = currentElem.attr('class');
+      currentClasses = currentElem.el.getAttribute('class');
       if (currentClasses && typeof currentClasses === 'string') {
         // trim spaces
         currentClasses = currentClasses.replace(/^\s\s*/, '').replace(/\s\s*$/, '');

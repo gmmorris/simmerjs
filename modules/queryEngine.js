@@ -10,22 +10,18 @@ export function isUniqueElementID ($DOM, elementID) {
   return (results.length === 1);
 }
 
-export function wrap (elm) {
+export function wrap (el) {
   /// When the DOM wrapper return the selected element it wrapps
   /// it with helper methods which aid in analyzing the result
   return {
-    el: elm,
-
-    attr: function (attribute) {
-      return this.el.getAttribute(attribute);
-    },
+    el,
 
     getTag: function () {
       return this.el.nodeName;
     },
 
     getClass: function () {
-      var classValue = this.attr('class');
+      var classValue = this.el.getAttribute('class');
       if (classValue) {
         return classValue;
       }
@@ -33,7 +29,7 @@ export function wrap (elm) {
     },
 
     getClasses: function () {
-      var classValue = this.attr('class');
+      var classValue = this.el.getAttribute('class');
       if (classValue && typeof classValue === 'string') {
         // trim spaces
         classValue = classValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
