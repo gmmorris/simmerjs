@@ -4,12 +4,12 @@ import { queryEngine, NoResult, compareParentElementAndSimmer, compareElementsAn
 
 import installSimmer from '../../modules/simmer'
 import helpers from '../../modules/helpers'
-import initQueryEngine, { domProto } from '../../modules/queryEngine'
+import initQueryEngine from '../../modules/queryEngine'
 
 const installSimmerOnWindow = windowScope => {
   installSimmer(windowScope,
     helpers,
-    initQueryEngine(windowScope, domProto)
+    initQueryEngine(windowScope)
   )
   return windowScope
 }

@@ -13,9 +13,12 @@
       "url": "https://github.com/gmmorris/simmerjs/blob/master/LICENSE"
     }
   ],
-  "dependencies": {},
+  "dependencies": {
+    "lodash.isfunction": "^3.0.8"
+  },
   "scripts": {
     "test": "jest .test.js",
+    "testw": "jest .test.js  --watch",
     "e2e": "nightwatch --config nightwatch.conf.js",
     "build": "rollup -c"
   },
@@ -38,7 +41,8 @@
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-closure-compiler-js": "^1.0.4",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "selenium-download": "^2.0.10"
+    "selenium-download": "^2.0.10",
+    "sinon": "^2.3.2"
   },
   "keywords": [
     "Simmer",

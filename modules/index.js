@@ -2,7 +2,7 @@
 
 import installSimmer from './simmer'
 import helpers from './helpers'
-import initQueryEngine, { domProto } from './queryEngine'
+import initQueryEngine from './queryEngine'
 
 /** Simmer
  * @author Gidi Morris, 2014
@@ -10,5 +10,5 @@ import initQueryEngine, { domProto } from './queryEngine'
  */
 installSimmer(window,
   helpers,
-  initQueryEngine(window, domProto)
+  initQueryEngine(window)
 )

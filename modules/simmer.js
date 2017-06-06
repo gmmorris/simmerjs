@@ -277,7 +277,7 @@ export default function (window, _, QueryEngine, undefined) {
   $DOM.attachQueryEngine(config.queryEngine, onError, Simmer);
 
   // Current version of the library.
-  Simmer.VERSION = '0.2.0';
+  Simmer.VERSION = '0.3.0';
 
   /**
    * Revert the global window.simmer variable to it's original value and return this simmer object.
