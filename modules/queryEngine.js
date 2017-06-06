@@ -3,9 +3,7 @@
    * key behavioural methods, such as sibling querying etc.
    * @param {object} elementOrSelector. An element we wish to wrapper or a CSS query string
    */
-  export default function (windowScope, domProto) {
-    'use strict';
-
+export default function (windowScope, domProto) {
     var QueryEngine = function () {
       //selector library support
       this.attachQueryEngine = function (queryEngine, onError, Simmer) {

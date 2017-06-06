@@ -1,8 +1,8 @@
 /*global window, document */
 
-import installSimmer from './modules/simmer'
-import helpers from './modules/helpers'
-import initQueryEngine, { domProto } from './modules/queryEngine'
+import installSimmer from './simmer'
+import helpers from './helpers'
+import initQueryEngine, { domProto } from './queryEngine'
 
 /** Simmer
  * @author Gidi Morris, 2014

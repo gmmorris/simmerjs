@@ -32,13 +32,14 @@ export default function (window, _, QueryEngine, undefined) {
       // A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length
       // then it is treated as if no selector could be found
       selectorMaxLength: 512
-    },
+    };
+
     /**
      * Handle errors in accordance with what is specified in the configuration
      * @param {object/string} ex. The exception object or message
      * @param {object} element. The element Simmer was asked to process
      */
-    onError = function (ex, element) {
+    function onError (ex, element) {
       // handle error
       if (config.errorHandling === true) {
         throw ex;
@@ -46,15 +47,16 @@ export default function (window, _, QueryEngine, undefined) {
       if (typeof config.errorHandling === 'function') {
         config.errorHandling(ex, element);
       }
-    },
-    $DOM = new QueryEngine(),
+    }
+
+    const $DOM = new QueryEngine();
     /**
      * Retireve the element's ancestors up to the configured level.
      * This is an internal function and is not to be used from the outside (nor can it, it is private)
      * @param element (Object) The elemen't whose ancestry we want to retrieve
      * @param depth (number) How deep to into the heirarchy to collect elements
      */
-    stackHierarchy = function (element, depth) {
+    function stackHierarchy (element, depth) {
       var hierarchy = [], index;
 
       for (index = 0; index < depth && element !== null; index += 1) {
@@ -63,14 +65,15 @@ export default function (window, _, QueryEngine, undefined) {
       }
 
       return hierarchy;
-    },
+    }
 
+    
     /**
      * Conver the Selector State into a merged CSS selector
      * @param state (object) The current selector state (has the stack and specificity sum)
      * @param depth (int) The number of levels to merge (1..state.stack.length)
      */
-    convertSelectorStateIntoCSSSelector = function (state, depth) {
+    function convertSelectorStateIntoCSSSelector (state, depth) {
       depth = depth || (state.stack.length);
 
       var selectorSegments = [],
@@ -96,14 +99,15 @@ export default function (window, _, QueryEngine, undefined) {
 
       // join as a hierarchy selector, in reverse order from top to bottom
       return selectorSegments.join(' > ');
-    },
+    }
+
     /**
      * Execute a query using the current selector state and see if it produces a unique result.
      * If the result is unique then the analysis is complete and we can finish the process.
      * @param {object} element. The element we are trying to build a selector for
      * @param {object} state. The current selector state (has the stack and specificity sum)
      */
-    analyzeSelectorState = function (element, state, selectorMaxLength) {
+    function analyzeSelectorState (element, state, selectorMaxLength) {
       var validated = false, depth, selector, results;
       for (depth = 1; depth <= state.stack.length && !validated; depth += 1) {
         // use selector to query an element and see if it is a one-to-one selection
@@ -125,13 +129,13 @@ export default function (window, _, QueryEngine, undefined) {
       }
 
       return validated;
-    },
+    }
     /**
      * The ParsingMethods are the key methods for the parsing process. They provide the various ways by which we analyze an element.
      * This object is a wrapper for building the list of available parsing methods and managing the context in which they are run so
      * that they all have access to basic parsing helper methods
      * */
-    parsingMethods = {
+    const parsingMethods = {
       methods : [],
       getMethods : function () {
         return this.methods.slice(0);
@@ -176,8 +180,9 @@ export default function (window, _, QueryEngine, undefined) {
           return false;
         }
       }
-    },
-    Parser = function () {
+    };
+
+    function Parser () {
       var queue = parsingMethods.getMethods();
       this.next = function (hierarchy, selectorState, config) {
         if (this.finished()) {
