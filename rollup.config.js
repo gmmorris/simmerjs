@@ -9,6 +9,18 @@ export default {
   plugins: [
     resolve(),
     babel({
+      babelrc: false,
+      "presets": [
+        [
+          "es2015", {
+            "modules": false
+          }
+        ],
+        "es2016"
+      ],
+      "plugins": [
+        "external-helpers"
+      ],
       exclude: 'node_modules/**' // only transpile our source code
     }),
     closure()
