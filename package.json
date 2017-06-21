@@ -1,7 +1,7 @@
 {
   "name": "simmerjs",
   "description": "A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "author": "Gidi Meir Morris",
   "main": "lib/simmer.js",
   "repository": {
@@ -15,7 +15,8 @@
     }
   ],
   "dependencies": {
-    "lodash.isfunction": "^3.0.8"
+    "lodash.isfunction": "^3.0.8",
+    "lodash.difference": "^4.5.0"
   },
   "scripts": {
     "test": "npm run testUnit && npm run testIntegration",
@@ -61,7 +62,6 @@
     "jest-codemods": "^0.10.1",
     "jsdom": "^11.0.0",
     "lint-staged": "^4.0.0",
-    "lodash.difference": "^4.5.0",
     "nightwatch": "^0.9.15",
     "path": "^0.12.7",
     "prettier": "^1.4.4",
