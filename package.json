@@ -30,7 +30,7 @@
     "format": "prettier-eslint --write \"modules/**/*.js\"",
     "formatTests": "prettier-eslint --write \"__tests__/integration/*.js\"",
     "precommit": "lint-staged",
-    "prepublish": "npm run build"
+    "prepublish": "npm run buildModule"
   },
   "lint-staged": {
     "*.js": [
