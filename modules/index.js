@@ -7,4 +7,4 @@ import initQueryEngine from './queryEngine'
  * @author Gidi Morris, 2014
  * @version 0.2.0
  */
-installSimmer(window, initQueryEngine(window));
+installSimmer(window, initQueryEngine(window))
