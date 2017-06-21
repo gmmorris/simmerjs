@@ -1,4 +1,4 @@
 node_modules
 *.log
-modules
-test
+modules/**/*.test.js
+__tests__
