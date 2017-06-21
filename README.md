@@ -82,14 +82,7 @@ The options are:
 | ------ | ------- |
 | **specificityThreshold** - A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called. This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many verifications. Specificity is calculated based on the W3C spec: http://www.w3.org/TR/css3-selectors/#specificity |  100 |
 | **depth** - How deep into the DOM hierarchy should Simmer go in order to reach a unique selector. This is a delicate game because the higher the number the more likely you are to reach a unique selector, but it also means a longer and more breakable one. Assuming you want to store this selector to use later, making it longer also means it is more likely to change and loose it's validity. | 3 | |
-| **errorHandling** - 
-  How to handle errors which occur during the analysis?
-  <br/>Valid Options<br/>
-  <ul>
-  <li>_false_: errors are ignored by Simmer</li>
-  <li>_true_: errors rethrown and expected to be caught by the user</li>
-  <li>_a function callback will be called with two parameters: the exception and the element being analyzed</li>
-  </ul> | false |
+| **errorHandling** - How to handle errors which occur during the analysis <br/><br/>Valid Options<br/><ul><li>_false_: errors are ignored by Simmer</li><li>_true_: errors rethrown and expected to be caught by the user</li><li>_a function callback will be called with two parameters: the exception and the element being analyzed</li></ul> | false |
 | **selectorMaxLength** - A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length then it is treated as if no selector could be found. | 520 |
 
 #### query
