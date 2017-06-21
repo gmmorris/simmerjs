@@ -23,13 +23,15 @@
     "testIntegration": "jest ./**/integration/*.test.js",
     "testE2E": "npm run build && nightwatch --config nightwatch.conf.js",
     "build": "rollup -c",
-
-    "format": "prettier --single-quote --no-semi --write \"modules/**/*.js\"",
+    "lint": "eslint ./modules/**/*.js",
+    "format": "prettier-eslint --write \"modules/**/*.js\"",
+    "formatTests": "prettier-eslint --write \"__tests__/integration/*.js\"",
     "precommit": "lint-staged"
   },
   "lint-staged": {
     "*.js": [
       "npm run format",
+      "npm run lint",
       "git add"
     ]
   },
@@ -41,6 +43,13 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2016": "^6.24.1",
     "env2": "^2.2.0",
+    "eslint": "^4.0.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jest": "^20.0.3",
+    "eslint-plugin-node": "^5.0.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
     "express": "^4.15.3",
     "husky": "^0.13.4",
     "jest": "^20.0.4",
@@ -51,6 +60,7 @@
     "nightwatch": "^0.9.15",
     "path": "^0.12.7",
     "prettier": "^1.4.4",
+    "prettier-eslint-cli": "^4.1.1",
     "regenerator-runtime": "^0.10.5",
     "rollup": "^0.42.0",
     "rollup-plugin-babel": "^2.7.1",
@@ -58,7 +68,8 @@
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
     "selenium-download": "^2.0.10",
-    "sinon": "^2.3.2"
+    "sinon": "^2.3.2",
+    "standard": "^10.0.2"
   },
   "keywords": [
     "Simmer",

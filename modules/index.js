@@ -1,4 +1,4 @@
-/*global window, document */
+/* global window, document */
 
 import installSimmer from './simmer'
 import initQueryEngine from './queryEngine'
