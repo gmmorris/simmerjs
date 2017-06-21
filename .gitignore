@@ -31,3 +31,4 @@ report/*
 reports/*
 selenium-debug.log
 screenshots/
+.DS_Store

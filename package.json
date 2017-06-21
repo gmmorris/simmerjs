@@ -17,9 +17,12 @@
     "lodash.isfunction": "^3.0.8"
   },
   "scripts": {
-    "test": "jest .test.js",
+    "test": "npm run testUnit && npm run testIntegration",
     "testw": "jest .test.js  --watch",
-    "e2e": "npm run build && nightwatch --config nightwatch.conf.js",
+    "testUnit": "jest ./modules",
+    "testIntegration": "jest ./**/integration/*.test.js",
+    "testE2E": "npm run build && nightwatch --config nightwatch.conf.js",
+
     "build": "rollup -c"
   },
   "devDependencies": {
