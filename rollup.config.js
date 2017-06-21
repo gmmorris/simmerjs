@@ -15,8 +15,6 @@ const babelConfig = {
   plugins: ['external-helpers'].concat(babelrc.plugins || [])
 }
 
-console.log(JSON.stringify(babelConfig))
-
 export default {
   entry: 'modules/index.js',
   format: 'iife',
