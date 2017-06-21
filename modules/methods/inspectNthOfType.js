@@ -7,7 +7,14 @@ import difference from 'lodash.difference'
  * @param {array} hierarchy. The hierarchy of elements
  * @param {object} state. The current calculated CSS selector
  */
-export default function (hierarchy, state, config, validateSelector, $DOM) {
+export default function (
+  hierarchy,
+  state,
+  config,
+  validateSelector,
+  query,
+  onError
+) {
   let index
   let hierarchyIndex = 0
   let siblings
@@ -78,7 +85,8 @@ export default function (hierarchy, state, config, validateSelector, $DOM) {
           hierarchy[0],
           state,
           config.selectorMaxLength,
-          $DOM
+          query,
+          onError
         )
       }
     }

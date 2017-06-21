@@ -49,7 +49,14 @@ export const context = {
   }
 }
 
-export default function (hierarchy, state, config, validateSelector, $DOM) {
+export default function (
+  hierarchy,
+  state,
+  config,
+  validateSelector,
+  query,
+  onError
+) {
   let hierarchyIndex = 0
   let siblings
   let indexOfElement
@@ -84,7 +91,8 @@ export default function (hierarchy, state, config, validateSelector, $DOM) {
           hierarchy[0],
           state,
           config.selectorMaxLength,
-          $DOM
+          query,
+          onError
         )
       }
     }

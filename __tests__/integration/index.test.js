@@ -6,12 +6,13 @@ import {
   compareElementsAndSimmer
 } from './utils'
 
-import installSimmer from '../../modules/simmer'
-import initQueryEngine from '../../modules/queryEngine'
+import createSimmer from '../../modules/simmer'
+import exposeOnWindow from '../../modules/exposeOnWindow'
+
 const { JSDOM } = require('jsdom')
 
 const installSimmerOnWindow = windowScope => {
-  installSimmer(windowScope, initQueryEngine(windowScope))
+  exposeOnWindow(windowScope, createSimmer(windowScope))
   return windowScope
 }
 

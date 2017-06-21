@@ -1,10 +1,5 @@
 /* global window, document */
+import simmer from './simmer'
+import exposeOnWindow from './exposeOnWindow'
 
-import installSimmer from './simmer'
-import initQueryEngine from './queryEngine'
-
-/** Simmer
- * @author Gidi Morris, 2014
- * @version 0.2.0
- */
-installSimmer(window, initQueryEngine(window))
+exposeOnWindow(window, simmer(window))

@@ -1,44 +1,16 @@
-import { wrap } from './queryEngine'
+import initQueryEngine, { wrap } from './queryEngine'
 import parsingMethods from './methods'
 import validateSelector from './validateSelector'
 import convertSelectorStateIntoCSSSelector from './convertSelectorStateIntoCSSSelector'
+import Parser from './parser'
+import stackHierarchy from './stackHierarchy'
+import { configure } from './configuration'
 
-export default function (window, QueryEngine, undefined) {
-  /**
-   * The top-level namespace
-   * @namespace Simmer. A reverse CSS Selector parser.
-   */
-  let Simmer
-  // Save the previous value of the `simmer` variable.
-  let conflictedSimmer = window.Simmer
-  // Configuration
-  let config = {
-    // A function for calling an external query engine for testing CSS selectors such as jQuery or Sizzle
-    // (If you have jQuery or Sizzle on the page, you have no need to supply such a function as Simmer will detect
-    // these and use them if they are available. this will not work if you have these libraries in noConflict mode.
-    queryEngine: null,
-    // A minimum specificty level. Once the parser reaches this level it starts verifying the selector after every method is called
-    // This can cut down our execution time by avoiding needless parsing but can also hurt execution times by performing many
-    // verifications. This number will have to be tweeked here and there as we use the component...
-    specificityThreshold: 100,
-    // How deep into the DOM hierarchy should Simmer go in order to reach a unique selector.
-    // This is a delicate game because the higher the number the more likely you are to reach a unique selector,
-    // but it also means a longer and more breakable one. Assuming you want to store this selector to use later,
-    // making it longer also means it is more likely to change and loose it's validity.
-    depth: 3,
-    // Handling errors in the Simmer analysis process.
-    // true / false / callback
-    // false: errors are ignored by Simmer
-    // true: errors rethrown by the process
-    // a function callback will be called with two parameters: the exception and the element being analyzed
-    errorHandling: e => {
-      console.log({ e })
-    },
-    // A maximum length for the CSS selector can be specified - if no specific selector can be found which is shorter than this length
-    // then it is treated as if no selector could be found
-    selectorMaxLength: 512
-  }
-
+export default function createSimmer (
+  windowScope = window,
+  config = configure(),
+  query = initQueryEngine(windowScope, config.queryEngine)
+) {
   /**
      * Handle errors in accordance with what is specified in the configuration
      * @param {object/string} ex. The exception object or message
@@ -54,43 +26,6 @@ export default function (window, QueryEngine, undefined) {
     }
   }
 
-  const $DOM = new QueryEngine()
-  /**
-     * Retireve the element's ancestors up to the configured level.
-     * This is an internal function and is not to be used from the outside (nor can it, it is private)
-     * @param element (Object) The elemen't whose ancestry we want to retrieve
-     * @param depth (number) How deep to into the heirarchy to collect elements
-     */
-  function stackHierarchy (element, depth) {
-    const hierarchy = []
-
-    for (let index = 0; index < depth && element !== null; index += 1) {
-      hierarchy[index] = element
-      element = hierarchy[index].parent()
-    }
-
-    return hierarchy
-  }
-
-  function Parser () {
-    var queue = parsingMethods.getMethods()
-    this.next = function (hierarchy, selectorState, config) {
-      if (this.finished()) {
-        return false
-      }
-      return queue.shift()(
-        hierarchy,
-        selectorState,
-        config,
-        validateSelector,
-        $DOM
-      )
-    }
-    this.finished = function () {
-      return queue.length === 0
-    }
-  }
-
   // Initialize the Simmer object and set it over the reference on the window
   /**
    * The main Simmer action - parses an element on the page to produce a CSS selector for it.
@@ -101,11 +36,11 @@ export default function (window, QueryEngine, undefined) {
    var cssSelectorForDonJulio = Simmer(document.getElementByID('DonJulio'));
    </pre></code>
    */
-  Simmer = window.Simmer = function (element) {
+  const simmer = function (element) {
     if (!element) {
       // handle error
       onError.call(
-        Simmer,
+        simmer,
         new Error('Simmer: No element was specified for parsing.'),
         element
       )
@@ -114,9 +49,9 @@ export default function (window, QueryEngine, undefined) {
 
     // The parser cycles through a set of parsing methods specified in an order optimal
     // for creating as specific as possible a selector
-    const parser = new Parser()
+    const parser = new Parser(parsingMethods)
 
-    // get the element's ancestors (Note that $DOM isn't jQuery,  but rather a generic DOM wrapper)
+    // get the element's ancestors
     const hierarchy = stackHierarchy(wrap(element), config.depth)
 
     // initialize the state of the selector
@@ -137,7 +72,14 @@ export default function (window, QueryEngine, undefined) {
     // we keep calling the methods until we are either satisfied or run out of methods
     while (!parser.finished() && !selectorState.verified) {
       try {
-        selectorState = parser.next(hierarchy, selectorState, config)
+        selectorState = parser.next(
+          hierarchy,
+          selectorState,
+          config,
+          validateSelector,
+          query,
+          onError
+        )
 
         // if we have reached a satisfactory level of specificity, try the selector, perhaps we have found our selector?
         if (
@@ -148,12 +90,13 @@ export default function (window, QueryEngine, undefined) {
             element,
             selectorState,
             config.selectorMaxLength,
-            $DOM
+            query,
+            onError
           )
         }
       } catch (ex) {
         // handle error
-        onError.call(Simmer, ex, element)
+        onError.call(simmer, ex, element)
       }
     }
 
@@ -170,7 +113,8 @@ export default function (window, QueryEngine, undefined) {
         element,
         selectorState,
         config.selectorMaxLength,
-        $DOM
+        query,
+        onError
       )
     }
 
@@ -187,28 +131,6 @@ export default function (window, QueryEngine, undefined) {
     return convertSelectorStateIntoCSSSelector(selectorState)
   }
 
-  // by calling attachQueryEngine (currently null) we're essencially telling Simmer to perform an initial
-  // search on the page for relevant libraries.
-  // If the user chooses to change the configuration we'll trigger this again, otherwise this check will
-  // already have been performed by the time the user wishes to use the library
-  $DOM.attachQueryEngine(config.queryEngine, onError, Simmer)
-
-  // Current version of the library.
-  Simmer.VERSION = '0.3.0'
-
-  /**
-   * Revert the global window.simmer variable to it's original value and return this simmer object.
-   * This allows users to include multiple versions of Simmer objects on a single page.
-   * @example
-   <code><pre>
-   Simmer.noConflict();
-   </pre></code>
-   */
-  Simmer.noConflict = function () {
-    window.Simmer = conflictedSimmer
-    return this
-  }
-
   /**
    * Get/Set the configuration for the Simmer object
    * @param config (Object) A configuration object with any of the properties tweeked (none/depth/minimumSpecificity)
@@ -219,29 +141,17 @@ export default function (window, QueryEngine, undefined) {
          });
    </pre></code>
    */
-  Simmer.configuration = function (configValues) {
-    var key, resetQueryEngine
-
-    // If an object param is provided - replace the specific properties
-    // it has set in the param with the equivalent property in the config
-    if (configValues && configValues instanceof Object) {
-      // check whether custom configurations have been specified, if so use them instead
-      // of the defaults
-      for (key in configValues) {
-        if (configValues.hasOwnProperty(key) && config.hasOwnProperty(key)) {
-          config[key] = configValues[key]
-          if (key === 'queryEngine') {
-            resetQueryEngine = true
-          }
-        }
-      }
-    }
-
-    if (resetQueryEngine) {
-      $DOM.attachQueryEngine(config.queryEngine, onError, Simmer)
-    }
-
-    // return the configuration object
-    return config
+  simmer.configure = function (configValues = {}, scope = windowScope) {
+    const newConfig = configure({
+      ...config,
+      ...configValues
+    })
+    return createSimmer(
+      scope,
+      initQueryEngine(scope, newConfig.queryEngine),
+      newConfig
+    )
   }
+
+  return simmer
 }

@@ -5,13 +5,20 @@ import { isUniqueElementID } from '../queryEngine'
  * @param {array} hierarchy. The hierarchy of elements
  * @param {object} state. The current selector state (has the stack and specificity sum)
  */
-export default function (hierarchy, state, config, validateSelector, $DOM) {
+export default function (
+  hierarchy,
+  state,
+  config,
+  validateSelector,
+  query,
+  onError
+) {
   var index, currentElem, currentID
   for (index = 0; index < hierarchy.length && !state.verified; index += 1) {
     currentElem = hierarchy[index]
     currentID = this.validationHelpers.attr(currentElem.el.getAttribute('id'))
     // make sure the ID is unique
-    if (currentID && isUniqueElementID($DOM, currentID)) {
+    if (currentID && isUniqueElementID(query, currentID)) {
       state.stack[index].push("[id='" + currentID + "']")
       state.specificity += 100
 
@@ -20,7 +27,13 @@ export default function (hierarchy, state, config, validateSelector, $DOM) {
         // An ID provides the highest specificity so we start by verifying the query's success so that, maybe, this will be enough
         // Note that the first element in the hierarchy (index 0) is the actual element we are looking to parse
         if (
-          validateSelector(hierarchy[0], state, config.selectorMaxLength, $DOM)
+          validateSelector(
+            hierarchy[0],
+            state,
+            config.selectorMaxLength,
+            query,
+            onError
+          )
         ) {
           // The ID worked like a charm - mark this state as verified and move on!
           state.verified = true
@@ -33,7 +46,13 @@ export default function (hierarchy, state, config, validateSelector, $DOM) {
       } else if (state.specificity >= config.specificityThreshold) {
         // we have reached the minimum specificity, lets try verifying now, as this will save us having to add more IDs to the selector
         if (
-          validateSelector(hierarchy[0], state, config.selectorMaxLength, $DOM)
+          validateSelector(
+            hierarchy[0],
+            state,
+            config.selectorMaxLength,
+            query,
+            onError
+          )
         ) {
           // The ID worked like a charm - mark this state as verified and move on!
           state.verified = true

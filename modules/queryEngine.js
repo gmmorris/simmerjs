@@ -3,9 +3,9 @@
  * @param {object} element. The element we are trying to build a selector for
  * @param {object} state. The current selector state (has the stack and specificity sum)
  */
-export function isUniqueElementID ($DOM, elementID) {
+export function isUniqueElementID (query, elementID) {
   // use selector to query an element and see if it is a one-to-one selection
-  var results = $DOM.query(`[id="${elementID}"]`) || []
+  var results = query(`[id="${elementID}"]`) || []
   return results.length === 1
 }
 
@@ -63,39 +63,27 @@ export function wrap (el) {
   }
 }
 
-/**
-   * A DOM manipulation object. Provides both CSS selector querying for verifications and a wrapper for the elements them selves to provide
-   * key behavioural methods, such as sibling querying etc.
-   * @param {object} elementOrSelector. An element we wish to wrapper or a CSS query string
-   */
-export default function (windowScope) {
-  var QueryEngine = function () {
-    // selector library support
-    this.attachQueryEngine = function (queryEngine, onError, Simmer) {
-      const { document } = windowScope
-      if (!(queryEngine && typeof queryEngine === 'function')) {
-        this.queryEngine = function (selector) {
-          try {
-            return document.querySelectorAll(selector)
-          } catch (ex) {
-            // handle error
-            onError.call(Simmer, ex, null)
-          }
-        }
-      } else {
-        this.queryEngine = queryEngine
-      }
-    }
-    this.query = function (selector) {
-      if (
-        typeof selector !== 'string' ||
-        typeof this.queryEngine !== 'function'
-      ) {
-        // No selctor, library nor methods to use, so return an empty array - no CSS selector will ever be generated in this situation!
-        return []
-      }
-      return this.queryEngine(selector)
-    }
+const documentQuerySelector = document => (selector, onError) => {
+  try {
+    return document.querySelectorAll(selector)
+  } catch (ex) {
+    // handle error
+    onError(ex)
   }
-  return QueryEngine
+}
+
+/**
+ * A DOM manipulation object. Provides both CSS selector querying for verifications and a wrapper for the elements them selves to provide
+ * key behavioural methods, such as sibling querying etc.
+ * @param {object} elementOrSelector. An element we wish to wrapper or a CSS query string
+ */
+export default function (windowScope, configuredQueryEngine) {
+  const { document } = windowScope
+  const queryEngine = typeof configuredQueryEngine === 'function'
+    ? configuredQueryEngine
+    : documentQuerySelector(document)
+
+  // If no selector we return an empty array - no CSS selector will ever be generated in this situation!
+  return (selector, onError) =>
+    typeof selector !== 'string' ? [] : queryEngine(selector, onError)
 }

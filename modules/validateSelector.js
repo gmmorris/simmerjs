@@ -5,7 +5,7 @@ import convertSelectorStateIntoCSSSelector from './convertSelectorStateIntoCSSSe
    * @param {object} element. The element we are trying to build a selector for
    * @param {object} state. The current selector state (has the stack and specificity sum)
    */
-export default function (element, state, selectorMaxLength, $DOM) {
+export default function (element, state, selectorMaxLength, query, onError) {
   let validated = false
   let selector
   let results
@@ -22,7 +22,7 @@ export default function (element, state, selectorMaxLength, $DOM) {
       // the selector is too long
       return false
     }
-    results = $DOM.query(selector)
+    results = query(selector, onError)
     validated =
       results.length === 1 &&
       (element.el !== undefined
