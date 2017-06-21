@@ -1,7 +1,7 @@
 {
   "name": "simmerjs",
   "description": "A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "author": "Gidi Meir Morris",
   "main": "lib/simmer.js",
   "repository": {
@@ -25,7 +25,7 @@
     "testE2E": "npm run build && nightwatch --config nightwatch.conf.js",
     "build": "npm run buildBrowser && npm run buildModule",
     "buildBrowser": "rollup -c",
-    "buildModule": "babel modules -d lib --ignore .test.js",
+    "buildModule": "rm -rf ./lib && babel modules -d lib --ignore .test.js",
     "lint": "eslint ./modules/**/*.js",
     "format": "prettier-eslint --write \"modules/**/*.js\"",
     "formatTests": "prettier-eslint --write \"__tests__/integration/*.js\"",
