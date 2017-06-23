@@ -1,7 +1,7 @@
 {
   "name": "simmerjs",
   "description": "A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "author": "Gidi Meir Morris",
   "main": "lib/simmer.js",
   "jsnext:main": "modules/simmer.js",
