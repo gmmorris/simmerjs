@@ -1,5 +1,5 @@
 import { isUniqueElementID } from '../queryEngine'
-
+import { attr } from './validationHelpers'
 /**
  * Inspect the elements' IDs and add them to the CSS Selector
  * @param {array} hierarchy. The hierarchy of elements
@@ -16,7 +16,7 @@ export default function (
   var index, currentElem, currentID
   for (index = 0; index < hierarchy.length && !state.verified; index += 1) {
     currentElem = hierarchy[index]
-    currentID = this.validationHelpers.attr(currentElem.el.getAttribute('id'))
+    currentID = attr(currentElem.el.getAttribute('id'))
     // make sure the ID is unique
     if (currentID && isUniqueElementID(query, currentID)) {
       state.stack[index].push("[id='" + currentID + "']")

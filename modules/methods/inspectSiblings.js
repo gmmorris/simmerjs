@@ -1,3 +1,5 @@
+import { className } from './validationHelpers'
+/**
 /**
  * Inspect the element's siblings by CSS Class names and compare them to the analyzed element.
  * @param {array} hierarchy. The hierarchy of elements
@@ -25,7 +27,7 @@ export default function (hierarchy, state) {
           classes.splice(10, classes.length - 10)
         }
         for (classIndex = 0; classIndex < classes.length; classIndex += 1) {
-          if (!this.validationHelpers.className(classes[classIndex])) {
+          if (!className(classes[classIndex])) {
             classes.splice(classIndex, 1)
           }
         }
