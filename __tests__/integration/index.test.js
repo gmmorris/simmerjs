@@ -12,7 +12,10 @@ import exposeOnWindow from '../../modules/exposeOnWindow'
 const { JSDOM } = require('jsdom')
 
 const installSimmerOnWindow = windowScope => {
-  exposeOnWindow(windowScope, createSimmer(windowScope))
+  exposeOnWindow(
+    windowScope,
+    createSimmer(windowScope, { errorHandling: e => console.log(e) })
+  )
   return windowScope
 }
 

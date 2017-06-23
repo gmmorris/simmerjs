@@ -8,9 +8,11 @@ import { configure } from './configuration'
 
 export default function createSimmer (
   windowScope = window,
-  config = configure(),
-  query = initQueryEngine(windowScope, config.queryEngine)
+  customConfig = {},
+  customQuery
 ) {
+  const config = configure(customConfig)
+  const query = customQuery || initQueryEngine(windowScope, config.queryEngine)
   /**
      * Handle errors in accordance with what is specified in the configuration
      * @param {object/string} ex. The exception object or message
@@ -57,17 +59,13 @@ export default function createSimmer (
     // initialize the state of the selector
     let selectorState = {
       // the stack is used to build a layer of selectors, each layer coresponding to a specific element in the heirarchy
-      stack: [],
+      // for each level we create a private stack of properties, so that we can then merge them
+      // comfortably and allow all methods to see the level at which existing properties have been set
+      stack: Array(hierarchy.length).fill().map(() => []),
       // follow the current specificity level of the selector - the higher the better
       specificity: 0
     }
 
-    // for each level we create a private stack of properties, so that we can then merge them
-    // comfortably and allow all methods to see the level at which existing properties have
-    // been set
-    for (let index = 0; index < hierarchy.length; index += 1) {
-      selectorState.stack[index] = []
-    }
     // cycle through the available parsing methods and while we still have yet to find the requested element's one-to-one selector
     // we keep calling the methods until we are either satisfied or run out of methods
     while (!parser.finished() && !selectorState.verified) {
