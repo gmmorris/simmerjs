@@ -1,4 +1,5 @@
-import { className } from './validationHelpers'
+import take from 'lodash.take'
+import { className as validateClassName } from './validationHelpers'
 /**
 /**
  * Inspect the element's siblings by CSS Class names and compare them to the analyzed element.
@@ -6,35 +7,23 @@ import { className } from './validationHelpers'
  * @param {object} state. The current calculated CSS selector
  */
 export default function (hierarchy, state) {
-  var index, classIndex, currentElem, currentClasses, classes
-  for (index = 0; index < hierarchy.length; index += 1) {
-    currentElem = hierarchy[index]
+  hierarchy.forEach((currentElem, index) => {
     // get class attribute
-    currentClasses = currentElem.el.getAttribute('class')
+    const currentClasses = (currentElem.el.getAttribute('class') || '')
+      .replace(/^\s\s*/, '')
+      .replace(/\s\s*$/, '')
+
     if (currentClasses && typeof currentClasses === 'string') {
-      // trim spaces
-      currentClasses = currentClasses
-        .replace(/^\s\s*/, '')
-        .replace(/\s\s*$/, '')
-      classes = currentClasses.match(/([^\s]+)/gi)
-      if (classes) {
-        if (classes.length > 0) {
-          // add . before the first class
-          classes[0] = '.' + classes[0]
-        }
+      const validClasses = take(currentClasses.match(/([^\s]+)/gi) || [], 10)
+        .filter(validateClassName)
+        .map(className => `.${className}`)
+
+      if (validClasses.length) {
         // limit to 10 classes
-        if (classes.length > 10) {
-          classes.splice(10, classes.length - 10)
-        }
-        for (classIndex = 0; classIndex < classes.length; classIndex += 1) {
-          if (!className(classes[classIndex])) {
-            classes.splice(classIndex, 1)
-          }
-        }
-        state.stack[index].push(classes.join('.'))
-        state.specificity += 10 * classes.length
+        state.stack[index].push(validClasses.join(''))
+        state.specificity += 10 * validClasses.length
       }
     }
-  }
+  })
   return state
 }
