@@ -24,6 +24,63 @@ const compareElementsAndSimmer = (
   )
 }
 
+const assertUnqueriableBySimmer = (
+  browser,
+  selector,
+  onFinish = () => browser.end()
+) => {
+  browser.execute(
+    function (selector) {
+      var el = document.querySelector(selector)
+      var simmerSelector = window.Simmer(el)
+
+      return {
+        simmerSelector,
+        wasUnselectable: simmerSelector === false
+      }
+    },
+    [selector],
+    function (result) {
+      browser.assert.equal(result.value.wasUnselectable, true)
+      onFinish(result.value.simmerSelector)
+    }
+  )
+}
+
+const compareElementsAndSimmerWithReconfiguration = (
+  browser,
+  id,
+  configuration,
+  onFinish = () => browser.end()
+) => {
+  browser.execute(
+    function (id, configuration) {
+      var el = document.getElementById(id)
+      el.removeAttribute('id')
+
+      var simmerSelector = window.Simmer(el)
+
+      var reconfiguredSimmer = window.Simmer.configure(configuration)
+
+      var reconfiguredSimmerSelector = reconfiguredSimmer(el)
+      var simmerEl = document.querySelector(reconfiguredSimmerSelector)
+
+      return {
+        configuration,
+        reconfiguredSimmerSelector,
+        didItFailAtDefault: simmerSelector === false,
+        didTheyMatch: el === simmerEl
+      }
+    },
+    [id, configuration],
+    function (result) {
+      browser.assert.equal(result.value.didItFailAtDefault, true)
+      browser.assert.equal(result.value.didTheyMatch, true)
+      onFinish(result.value.reconfiguredSimmerSelector)
+    }
+  )
+}
+
 let server
 module.exports = {
   before: function (browser, done) {
@@ -195,12 +252,22 @@ module.exports = {
   'cannot parse an element with an identical hierarchy whithin the Simmers default configured depth': function (
     browser
   ) {
-    // const windowScope = createWindow(fixture);
-    // var placeHolder = queryEngine(windowScope.document).query('#placeholderId'), elements;
-    // placeHolder.removeAttribute('id');
-    // elements = compareElementsAndSimmer(windowScope, placeHolder[0]);
-    // expect(elements).not.toBe(undefined);
-    // expect(elements).toEqual(NoResult);
+    browser
+      .url('localhost:3993') // visit the local url
+      .waitForElementVisible('body') // wait for the body to be rendered
+
+    compareElementsAndSimmerWithReconfiguration(
+      browser,
+      'placeholderId',
+      { depth: 7 },
+      selector => {
+        browser.assert.equal(
+          selector,
+          "SPAN[id='deepId'] > SPAN > SPAN > SPAN > SPAN > P > A"
+        )
+        browser.end()
+      }
+    )
   },
 
   'can analyze an element with a parent which has an invalid Tag name': function (
@@ -286,10 +353,13 @@ module.exports = {
   'cant analyze an element which is longer than the selectorMaxLength chars': function (
     browser
   ) {
-    // const windowScope = createWindow(fixture);
-    // var placeHolder = queryEngine(windowScope.document).query('#aZROCRDPX41Qkden3aiC3o9Tkl0xqENUjIgNSWbe6pSddw86ogN018T9lD67zAF1YHaLkRngy8YVq88IBfqdvtO9aXZZbD1NsSBiUo6txcv22ufrkRs9AZKkxIkTF1gNAZ3Oh4M6TcYWRARVJqOZwo3dQufTDm904ep3yHZ5vdHqIyFqTFdZYPWYumx5gJBmWn7GbZQ3O3HodzmHYIHhCYg4dCDfSN8iCHzezerdHbzWUKR7pzMDOzvq017a63LSqYkSJ0gWxrgJFj45HR25eJj5szEFmuQlCfkbWpCwYopeNhy1toC9PvSfVCnHpI7EXeqVcspP0aQISflgD0pBMgg2ieITRa5gXRnKoDdem1yXvHjcDBXJFoUy63zDwg6tTtRR6rijcvoxNzGjWCgQhdqzlv6CW2CVgK2aa0VSX9RMSUTSKXmru7mvZUXJxv7RO7n1Zw9meFygwHwgNrZgeRWVYhsXBtEG8Bak7sPQ7x37QXgIgbJRcbhqMK2F5baa'),
-    //   elements = compareElementsAndSimmer(windowScope, placeHolder[0]);
-    // expect(elements).not.toBe(undefined);
-    // expect(elements).toEqual(NoResult);
+    browser
+      .url('localhost:3993') // visit the local url
+      .waitForElementVisible('body') // wait for the body to be rendered
+
+    assertUnqueriableBySimmer(
+      browser,
+      '#aZROCRDPX41Qkden3aiC3o9Tkl0xqENUjIgNSWbe6pSddw86ogN018T9lD67zAF1YHaLkRngy8YVq88IBfqdvtO9aXZZbD1NsSBiUo6txcv22ufrkRs9AZKkxIkTF1gNAZ3Oh4M6TcYWRARVJqOZwo3dQufTDm904ep3yHZ5vdHqIyFqTFdZYPWYumx5gJBmWn7GbZQ3O3HodzmHYIHhCYg4dCDfSN8iCHzezerdHbzWUKR7pzMDOzvq017a63LSqYkSJ0gWxrgJFj45HR25eJj5szEFmuQlCfkbWpCwYopeNhy1toC9PvSfVCnHpI7EXeqVcspP0aQISflgD0pBMgg2ieITRa5gXRnKoDdem1yXvHjcDBXJFoUy63zDwg6tTtRR6rijcvoxNzGjWCgQhdqzlv6CW2CVgK2aa0VSX9RMSUTSKXmru7mvZUXJxv7RO7n1Zw9meFygwHwgNrZgeRWVYhsXBtEG8Bak7sPQ7x37QXgIgbJRcbhqMK2F5baa'
+    )
   }
 }
