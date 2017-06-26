@@ -9,7 +9,7 @@ import { configure } from './configuration'
 export default function createSimmer (
   windowScope = window,
   customConfig = {},
-  customQuery
+  customQuery = false
 ) {
   const config = configure(customConfig)
   const query = customQuery || initQueryEngine(windowScope, config.queryEngine)
@@ -146,8 +146,8 @@ export default function createSimmer (
     })
     return createSimmer(
       scope,
-      initQueryEngine(scope, newConfig.queryEngine),
-      newConfig
+      newConfig,
+      initQueryEngine(scope, newConfig.queryEngine)
     )
   }
 
