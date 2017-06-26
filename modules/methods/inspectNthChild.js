@@ -49,14 +49,7 @@ export const context = {
   }
 }
 
-export default function (
-  hierarchy,
-  state,
-  config,
-  validateSelector,
-  query,
-  onError
-) {
+export default function (hierarchy, state, validateSelector) {
   let hierarchyIndex = 0
   let siblings
   let indexOfElement
@@ -87,13 +80,7 @@ export default function (
 
         // Verify the selector as we don't want to go on and parse the parent's siblings
         // if we don't have to!
-        state.verified = validateSelector(
-          hierarchy[0],
-          state,
-          config.selectorMaxLength,
-          query,
-          onError
-        )
+        state.verified = validateSelector(state)
       }
     }
 

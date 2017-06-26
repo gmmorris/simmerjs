@@ -66,6 +66,8 @@ export default function createSimmer (
       specificity: 0
     }
 
+    const validator = validateSelector(element, config, query, onError)
+
     // cycle through the available parsing methods and while we still have yet to find the requested element's one-to-one selector
     // we keep calling the methods until we are either satisfied or run out of methods
     while (!parser.finished() && !selectorState.verified) {
@@ -73,10 +75,9 @@ export default function createSimmer (
         selectorState = parser.next(
           hierarchy,
           selectorState,
+          validator,
           config,
-          validateSelector,
-          query,
-          onError
+          query
         )
 
         // if we have reached a satisfactory level of specificity, try the selector, perhaps we have found our selector?
@@ -84,13 +85,7 @@ export default function createSimmer (
           selectorState.specificity >= config.specificityThreshold &&
           !selectorState.verified
         ) {
-          selectorState.verified = validateSelector(
-            element,
-            selectorState,
-            config.selectorMaxLength,
-            query,
-            onError
-          )
+          selectorState.verified = validator(selectorState)
         }
       } catch (ex) {
         // handle error
@@ -107,13 +102,7 @@ export default function createSimmer (
       // try and verify, and if verification fails - return false
       // if it is false and the specificity is too low to actually try and find the element in the first place, then we may simply have not run
       // an up to date verification - try again
-      selectorState.verified = validateSelector(
-        element,
-        selectorState,
-        config.selectorMaxLength,
-        query,
-        onError
-      )
+      selectorState.verified = validator(selectorState)
     }
 
     if (!selectorState.verified) {

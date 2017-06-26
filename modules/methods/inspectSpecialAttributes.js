@@ -3,14 +3,7 @@
  * @param {array} hierarchy. The hierarchy of elements
  * @param {object} state. The current calculated CSS selector
  */
-export default function (
-  hierarchy,
-  state,
-  config,
-  validateSelector,
-  query,
-  onError
-) {
+export default function (hierarchy, state, validateSelector) {
   let elm = hierarchy[0]
   let tag = elm.el.nodeName
   let attribute
@@ -35,15 +28,7 @@ export default function (
       return state
   }
 
-  if (
-    validateSelector(
-      hierarchy[0],
-      state,
-      config.selectorMaxLength,
-      query,
-      onError
-    )
-  ) {
+  if (validateSelector(state)) {
     // the unique attribute worked!
     state.verified = true
   } else {

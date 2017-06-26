@@ -5,14 +5,7 @@ import { attr } from './validationHelpers'
  * @param {array} hierarchy. The hierarchy of elements
  * @param {object} state. The current selector state (has the stack and specificity sum)
  */
-export default function (
-  hierarchy,
-  state,
-  config,
-  validateSelector,
-  query,
-  onError
-) {
+export default function (hierarchy, state, validateSelector, config, query) {
   var index, currentElem, currentID
   for (index = 0; index < hierarchy.length && !state.verified; index += 1) {
     currentElem = hierarchy[index]
@@ -26,15 +19,7 @@ export default function (
       if (index === 0) {
         // An ID provides the highest specificity so we start by verifying the query's success so that, maybe, this will be enough
         // Note that the first element in the hierarchy (index 0) is the actual element we are looking to parse
-        if (
-          validateSelector(
-            hierarchy[0],
-            state,
-            config.selectorMaxLength,
-            query,
-            onError
-          )
-        ) {
+        if (validateSelector(state)) {
           // The ID worked like a charm - mark this state as verified and move on!
           state.verified = true
         } else {
@@ -45,15 +30,7 @@ export default function (
         }
       } else if (state.specificity >= config.specificityThreshold) {
         // we have reached the minimum specificity, lets try verifying now, as this will save us having to add more IDs to the selector
-        if (
-          validateSelector(
-            hierarchy[0],
-            state,
-            config.selectorMaxLength,
-            query,
-            onError
-          )
-        ) {
+        if (validateSelector(state)) {
           // The ID worked like a charm - mark this state as verified and move on!
           state.verified = true
         }
