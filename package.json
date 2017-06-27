@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "lodash.difference": "^4.5.0",
+    "lodash.flatmap": "^4.5.0",
     "lodash.isfunction": "^3.0.8",
     "lodash.take": "^4.1.1"
   },

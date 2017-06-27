@@ -1,7 +1,7 @@
 import inspectElementID from './inspectElementID'
 import inspectTags from './inspectTags'
 import inspectSiblings from './inspectSiblings'
-import inspectNthChild, { context as inspectNthChildContext } from './inspectNthChild'
+import inspectNthChild from './inspectNthChild'
 import inspectSpecialAttributes from './inspectSpecialAttributes'
 
 /**
@@ -14,9 +14,8 @@ const parsingMethods = {
   getMethods: function () {
     return this.methods.slice(0)
   },
-  addMethod: function (fn, context) {
-    context = context && typeof context === 'object' ? context : this
-    this.methods.push(fn.bind(context))
+  addMethod: function (fn) {
+    this.methods.push(fn)
   }
 }
 
@@ -24,6 +23,6 @@ parsingMethods.addMethod(inspectElementID)
 parsingMethods.addMethod(inspectTags)
 parsingMethods.addMethod(inspectSpecialAttributes)
 parsingMethods.addMethod(inspectSiblings)
-parsingMethods.addMethod(inspectNthChild, inspectNthChildContext)
+parsingMethods.addMethod(inspectNthChild)
 
 export default parsingMethods

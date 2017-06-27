@@ -9,6 +9,19 @@ export function isUniqueElementID (query, elementID) {
   return results.length === 1
 }
 
+function traverseAttribute (el, dir) {
+  const matched = []
+  let cur = el[dir]
+
+  while (cur && cur.nodeType !== 9) {
+    if (cur.nodeType === 1) {
+      matched.push(wrap(cur))
+    }
+    cur = cur[dir]
+  }
+  return matched
+}
+
 export function wrap (el) {
   /// When the DOM wrapper return the selected element it wrapps
   /// it with helper methods which aid in analyzing the result
@@ -16,49 +29,28 @@ export function wrap (el) {
     el,
 
     getClass: function () {
-      var classValue = this.el.getAttribute('class')
-      if (classValue) {
-        return classValue
-      }
-      return ''
+      return this.el.getAttribute('class') || ''
     },
 
     getClasses: function () {
-      var classValue = this.el.getAttribute('class')
-      if (classValue && typeof classValue === 'string') {
-        // trim spaces
-        classValue = classValue.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
-        if (classValue !== '') {
-          return classValue.split(' ')
-        }
-      }
-      return []
+      return this.getClass()
+        .split(' ')
+        .map(className => className.replace(/^\s\s*/, '').replace(/\s\s*$/, ''))
+        .filter(className => className.length > 0)
     },
 
     prevAll: function () {
-      return this.dir('previousSibling')
+      return traverseAttribute(this.el, 'previousSibling')
     },
 
     nextAll: function () {
-      return this.dir('nextSibling')
+      return traverseAttribute(this.el, 'nextSibling')
     },
 
     parent: function () {
-      var parent = this.el.parentNode
-      return parent && parent.nodeType !== 11 ? wrap(parent) : null
-    },
-
-    dir: function (dir) {
-      const matched = []
-      let cur = this.el[dir]
-
-      while (cur && cur.nodeType !== 9) {
-        if (cur.nodeType === 1) {
-          matched.push(wrap(cur))
-        }
-        cur = cur[dir]
-      }
-      return matched
+      return this.el.parentNode && this.el.parentNode.nodeType !== 11
+        ? wrap(this.el.parentNode)
+        : null
     }
   }
 }
