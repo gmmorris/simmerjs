@@ -19,7 +19,8 @@
     "lodash.difference": "^4.5.0",
     "lodash.flatmap": "^4.5.0",
     "lodash.isfunction": "^3.0.8",
-    "lodash.take": "^4.1.1"
+    "lodash.take": "^4.1.1",
+    "lodash.takeright": "^4.1.1"
   },
   "scripts": {
     "test": "npm run testUnit && npm run testIntegration",
