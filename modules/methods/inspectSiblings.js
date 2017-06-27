@@ -7,23 +7,16 @@ import { className as validateClassName } from './validationHelpers'
  * @param {object} state. The current calculated CSS selector
  */
 export default function (hierarchy, state) {
-  hierarchy.forEach((currentElem, index) => {
-    // get class attribute
-    const currentClasses = (currentElem.el.getAttribute('class') || '')
-      .replace(/^\s\s*/, '')
-      .replace(/\s\s*$/, '')
+  return hierarchy.reduce((selectorState, currentElem, index) => {
+    const validClasses = take(currentElem.getClasses(), 10)
+      .filter(validateClassName)
+      .map(className => `.${className}`)
 
-    if (currentClasses && typeof currentClasses === 'string') {
-      const validClasses = take(currentClasses.match(/([^\s]+)/gi) || [], 10)
-        .filter(validateClassName)
-        .map(className => `.${className}`)
-
-      if (validClasses.length) {
-        // limit to 10 classes
-        state.stack[index].push(validClasses.join(''))
-        state.specificity += 10 * validClasses.length
-      }
+    if (validClasses.length) {
+      // limit to 10 classes
+      selectorState.stack[index].push(validClasses.join(''))
+      selectorState.specificity += 10 * validClasses.length
     }
-  })
-  return state
+    return selectorState
+  }, state)
 }
