@@ -119,7 +119,7 @@ You can also use this API to change the Scope in which Simmer operates by provid
 const clonedDocument = document.cloneNode(true)
 
 window.Simmer = window.Simmer.configure({}, clonedDocument)
-
+```
 
 ### Conflict
 When the Simmer browser dist located at **dist/simmer.js** is injected in to the browser it adds the noConflict function on itself.
