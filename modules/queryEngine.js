@@ -55,12 +55,25 @@ export function wrap (el) {
   }
 }
 
-const documentQuerySelector = document => (selector, onError) => {
-  try {
-    return document.querySelectorAll(selector)
-  } catch (ex) {
-    // handle error
-    onError(ex)
+const INVALID_DOCUMENT = {
+  querySelectorAll () {
+    throw new Error(
+      'An invalid context has been provided to Simmer, it doesnt know how to query it'
+    )
+  }
+}
+
+const documentQuerySelector = scope => {
+  const document = typeof scope.querySelectorAll === 'function'
+    ? scope
+    : scope.document ? scope.document : INVALID_DOCUMENT
+  return (selector, onError) => {
+    try {
+      return document.querySelectorAll(selector)
+    } catch (ex) {
+      // handle error
+      onError(ex)
+    }
   }
 }
 
@@ -69,13 +82,12 @@ const documentQuerySelector = document => (selector, onError) => {
  * key behavioural methods, such as sibling querying etc.
  * @param {object} elementOrSelector. An element we wish to wrapper or a CSS query string
  */
-export default function (windowScope, configuredQueryEngine) {
-  const { document } = windowScope
+export default function (scope, configuredQueryEngine) {
   const queryEngine = typeof configuredQueryEngine === 'function'
     ? configuredQueryEngine
-    : documentQuerySelector(document)
+    : documentQuerySelector(scope)
 
   // If no selector we return an empty array - no CSS selector will ever be generated in this situation!
   return (selector, onError) =>
-    typeof selector !== 'string' ? [] : queryEngine(selector, onError)
+    typeof selector !== 'string' ? [] : queryEngine(selector, onError, scope)
 }
