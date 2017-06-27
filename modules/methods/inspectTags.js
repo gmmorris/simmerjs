@@ -7,16 +7,11 @@ import { tagName } from './validationHelpers'
  * @param {object} state. The current calculated CSS selector
  */
 export default function (hierarchy, state) {
-  var index, currentElem, currentTag
-  for (index = 0; index < hierarchy.length; index += 1) {
-    currentElem = hierarchy[index]
-    currentTag = tagName(currentElem.el.nodeName)
-
-    if (currentTag) {
-      state.stack[index].splice(0, 0, currentTag)
-      state.specificity += 10
-    }
-  }
-
-  return state
+  return hierarchy.reduce((selectorState, currentElem, index) => {
+    ;[currentElem.el.nodeName].filter(tagName).forEach(tagName => {
+      selectorState.stack[index].splice(0, 0, tagName)
+      selectorState.specificity += 10
+    })
+    return selectorState
+  }, state)
 }
