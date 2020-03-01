@@ -55,7 +55,7 @@ import Simmer from 'simmerjs'
 const simmer = new Simmer(window, { /* some custom configuration */ })
 var myElement = document.getElementById("#myUniqueElement");
 
-console.log(simmer(myElement)); // prints "#myUniqueElement"
+console.log(simmer(myElement)); // prints "[id='myUniqueElement']"
 ```
 ## API
 
