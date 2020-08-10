@@ -5,6 +5,7 @@
   "author": "Gidi Meir Morris",
   "main": "lib/simmer.js",
   "jsnext:main": "modules/simmer.js",
+  "types": "index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/gmmorris/simmerjs.git"
