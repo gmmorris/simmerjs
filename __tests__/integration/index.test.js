@@ -278,6 +278,17 @@ test(`can analyze an element with an invalid ID (not unique)`, function () {
   expect(elements.selector.match(':asd')).toBe(null)
 })
 
+test(`can analyze an element with a class that contains a colon`, function () {
+  const windowScope = createWindow(fixture)
+  var elements = compareElementsAndSimmer(windowScope, `.this-is\\:fine`)
+  expect(elements).not.toBe(undefined)
+  expect(elements.SimmerEl).not.toBe(undefined)
+  expect(elements.el).not.toBe(undefined)
+  expect(elements.el).toBe(elements.SimmerEl)
+  // make sure the selector is one level deep
+  expect(elements.selector).toEqual('DIV.this-is\\:fine')
+})
+
 test(`can't analyze an element which is longer than the selectorMaxLength chars`, function () {
   const windowScope = createWindow(fixture)
   const placeHolder = queryEngine(windowScope.document).query(

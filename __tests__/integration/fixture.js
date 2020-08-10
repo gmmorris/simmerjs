@@ -59,6 +59,7 @@ export default `
               </div>
           </div>
       </div>
+      <div class="this-is:fine"></div>
       <div>
           <div>
               <div>
