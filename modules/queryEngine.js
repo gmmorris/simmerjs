@@ -9,6 +9,12 @@ export function isUniqueElementID (query, elementID) {
   return results.length === 1
 }
 
+export function isUniqueDataAttr (query, dataAttr) {
+  // use selector to query an element and see if it is a one-to-one selection
+  var results = query(`[data-attr="${dataAttr}"]`) || []
+  return results.length === 1
+}
+
 function traverseAttribute (el, dir) {
   const matched = []
   let cur = el[dir]
