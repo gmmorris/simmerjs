@@ -7,7 +7,7 @@ export interface Simmer {
     /**
      * Analyze an element and produce a unique CSS selector for it.
      */
-    (element: Element): string;
+    (element: Element): string | null;
 
     /**
      * If you have an existing instance of Simmer, you can use its configure
