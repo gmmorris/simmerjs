@@ -1,23 +1,15 @@
 // rollup.config.js
-import resolve from 'rollup-plugin-node-resolve'
-import babel from 'rollup-plugin-babel'
-import closure from 'rollup-plugin-closure-compiler-js'
+import resolve from '@rollup/plugin-node-resolve'
+import babel from '@rollup/plugin-babel'
+import closure from '@ampproject/rollup-plugin-closure-compiler'
 import commonjs from 'rollup-plugin-commonjs'
-import fs from 'fs'
-
-const babelrc = JSON.parse(fs.readFileSync('./.babelrc', 'utf8'))
-
-const babelConfig = {
-  babelrc: false,
-  presets: [['es2015', { modules: false }]].concat(
-    (babelrc.presets || []).filter(preset => preset !== 'es2015')
-  ),
-  plugins: ['external-helpers'].concat(babelrc.plugins || [])
-}
 
 export default {
-  entry: 'modules/index.js',
-  format: 'iife',
+  input: 'modules/index.js',
+  output: {
+    file: 'dist/simmer.js',
+    format: 'cjs'
+  },
   plugins: [
     resolve({
       jsnext: true,
@@ -34,8 +26,7 @@ export default {
       // if false then skip sourceMap generation for CommonJS modules
       sourceMap: false
     }),
-    babel(babelConfig),
+    babel({ babelHelpers: 'bundled' }),
     closure()
-  ],
-  dest: 'dist/simmer.js'
+  ]
 }

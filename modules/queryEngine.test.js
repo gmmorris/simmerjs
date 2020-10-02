@@ -5,22 +5,23 @@ const createElement = (dom = '') =>
 /// HTMLElement
 describe('QueryEngine', () => {
   describe('attachQueryEngine', () => {
-    test(`defaults to using the document.querySelectorAll as queryEngine`, function () {
-      const returnValue = [{ tagName: 'div' }, { tagName: 'div' }]
-      const querySelectorAll = jest.fn(() => returnValue)
-
-      const windowScope = {
-        document: {
-          querySelectorAll
-        }
-      }
-
-      const $ = initQueryEngine(windowScope)
-
-      expect($('div')).toBe(returnValue)
-
-      expect(querySelectorAll.mock.calls[0][0]).toBe('div')
-    })
+    // // No more! Using querySelectorDeep now
+    // test(`defaults to using the document.querySelectorAll as queryEngine`, function () {
+    //   const returnValue = [{ tagName: 'div' }, { tagName: 'div' }]
+    //   const querySelectorAll = jest.fn(() => returnValue)
+    //
+    //   const windowScope = {
+    //     document: {
+    //       querySelectorAll
+    //     }
+    //   }
+    //
+    //   const $ = initQueryEngine(windowScope)
+    //
+    //   expect($('div')).toBe(returnValue)
+    //
+    //   expect(querySelectorAll.mock.calls[0][0]).toBe('div')
+    // })
 
     test(`takes a query engine and uses it to query`, function () {
       const returnValue = [{ tagName: 'div' }, { tagName: 'div' }]

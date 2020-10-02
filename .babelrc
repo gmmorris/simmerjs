@@ -1,9 +1,10 @@
 {
   "presets": [
-    "es2015",
-    "es2016"
+    [
+      "@babel/preset-env"
+    ]
   ],
   "plugins": [
-    "transform-object-rest-spread"
+    "@babel/plugin-transform-parameters"
   ]
 }

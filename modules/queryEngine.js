@@ -1,3 +1,5 @@
+import { querySelectorAllDeep } from ' @mariusandra/query-selector-shadow-dom'
+
 /**
  * Verify a specific ID's uniqueness one the page
  * @param {object} element. The element we are trying to build a selector for
@@ -80,7 +82,7 @@ const documentQuerySelector = scope => {
         : INVALID_DOCUMENT
   return (selector, onError) => {
     try {
-      return document.querySelectorAll(selector)
+      return querySelectorAllDeep(selector, document)
     } catch (ex) {
       // handle error
       onError(ex)
