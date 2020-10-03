@@ -34,3 +34,4 @@ selenium-server.log
 screenshots/
 .DS_Store
 lib/
+dist/
