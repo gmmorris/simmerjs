@@ -88,5 +88,13 @@
     "css",
     "css selector",
     "sizzle"
-  ]
+  ],
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@mariusandra)/)"
+    ]
+  }
 }

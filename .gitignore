@@ -35,3 +35,4 @@ screenshots/
 .DS_Store
 lib/
 dist/
+yarn-error.log
