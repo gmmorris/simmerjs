@@ -1,12 +1,12 @@
 const handlers = {
-  A: (state, elm) => {
-    const attribute = elm.el.getAttribute('href')
-    if (attribute) {
-      state.stack[0].push(`[href="${attribute}"]`)
-      state.specificity += 10
-    }
-    return state
-  },
+  // A: (state, elm) => {
+  //   const attribute = elm.el.getAttribute('href')
+  //   if (attribute) {
+  //     state.stack[0].push(`[href="${attribute}"]`)
+  //     state.specificity += 10
+  //   }
+  //   return state
+  // },
   IMG: (state, elm) => {
     const attribute = elm.el.getAttribute('src')
     if (attribute) {
