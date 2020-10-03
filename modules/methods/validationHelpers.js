@@ -7,7 +7,7 @@
 export function tagName (tagName) {
   if (
     typeof tagName === 'string' &&
-    tagName.match(/^[a-zA-Z0-9]+$/gi) !== null
+    tagName.match(/^[a-zA-Z0-9-]+$/gi) !== null
   ) {
     return tagName
   }

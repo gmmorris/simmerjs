@@ -10,7 +10,12 @@ export default function (hierarchy, state) {
   return hierarchy.reduce((selectorState, currentElem, index) => {
     ;[currentElem.el.nodeName].filter(tagName).forEach(tagName => {
       selectorState.stack[index].splice(0, 0, tagName)
-      selectorState.specificity += 10
+      // custom elements get a few more points
+      if (tagName.includes('-')) {
+        selectorState.specificity += 30
+      } else {
+        selectorState.specificity += 10
+      }
     })
     return selectorState
   }, state)
