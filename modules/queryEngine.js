@@ -1,3 +1,5 @@
+import { querySelectorAllDeep } from '@mariusandra/query-selector-shadow-dom'
+
 /**
  * Verify a specific ID's uniqueness one the page
  * @param {object} element. The element we are trying to build a selector for
@@ -6,6 +8,12 @@
 export function isUniqueElementID (query, elementID) {
   // use selector to query an element and see if it is a one-to-one selection
   var results = query(`[id="${elementID}"]`) || []
+  return results.length === 1
+}
+
+export function isUniqueDataAttr (query, dataAttr) {
+  // use selector to query an element and see if it is a one-to-one selection
+  var results = query(`[data-attr="${dataAttr}"]`) || []
   return results.length === 1
 }
 
@@ -48,8 +56,10 @@ export function wrap (el) {
     },
 
     parent: function () {
-      return this.el.parentNode && this.el.parentNode.nodeType !== 11
-        ? wrap(this.el.parentNode)
+      return this.el.parentNode
+        ? this.el.parentNode.nodeType === 11
+          ? wrap(this.el.parentNode.host)
+          : wrap(this.el.parentNode)
         : null
     }
   }
@@ -64,12 +74,15 @@ const INVALID_DOCUMENT = {
 }
 
 const documentQuerySelector = scope => {
-  const document = typeof scope.querySelectorAll === 'function'
-    ? scope
-    : scope.document ? scope.document : INVALID_DOCUMENT
+  const document =
+    typeof scope.querySelectorAll === 'function'
+      ? scope
+      : scope.document
+        ? scope.document
+        : INVALID_DOCUMENT
   return (selector, onError) => {
     try {
-      return document.querySelectorAll(selector)
+      return querySelectorAllDeep(selector, document)
     } catch (ex) {
       // handle error
       onError(ex)
@@ -83,9 +96,10 @@ const documentQuerySelector = scope => {
  * @param {object} elementOrSelector. An element we wish to wrapper or a CSS query string
  */
 export default function (scope, configuredQueryEngine) {
-  const queryEngine = typeof configuredQueryEngine === 'function'
-    ? configuredQueryEngine
-    : documentQuerySelector(scope)
+  const queryEngine =
+    typeof configuredQueryEngine === 'function'
+      ? configuredQueryEngine
+      : documentQuerySelector(scope)
 
   // If no selector we return an empty array - no CSS selector will ever be generated in this situation!
   return (selector, onError) =>

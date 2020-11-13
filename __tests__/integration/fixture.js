@@ -60,6 +60,7 @@ export default `
           </div>
       </div>
       <div class="this-is:fine"></div>
+      <div id="somestuff" data-attr="blue"></div>
       <div>
           <div>
               <div>

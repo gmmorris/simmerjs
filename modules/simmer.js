@@ -46,7 +46,7 @@ export default function createSimmer (
         new Error('Simmer: No element was specified for parsing.'),
         element
       )
-      return false
+      return null
     }
 
     // The parser cycles through a set of parsing methods specified in an order optimal
@@ -106,7 +106,7 @@ export default function createSimmer (
     }
 
     if (!selectorState.verified) {
-      return false
+      return null
     }
 
     if (selectorState.verificationDepth) {

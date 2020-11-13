@@ -289,6 +289,16 @@ test(`can analyze an element with a class that contains a colon`, function () {
   expect(elements.selector).toEqual('DIV.this-is\\:fine')
 })
 
+test(`can analyze an element with data-attr`, function () {
+  const windowScope = createWindow(fixture)
+  var elements = compareElementsAndSimmer(windowScope, '#somestuff')
+  expect(elements).not.toBe(undefined)
+  expect(elements.SimmerEl).not.toBe(undefined)
+  expect(elements.el).not.toBe(undefined)
+  expect(elements.el).toBe(elements.SimmerEl)
+  expect(elements.selector).toEqual("[data-attr='blue']")
+})
+
 test(`can't analyze an element which is longer than the selectorMaxLength chars`, function () {
   const windowScope = createWindow(fixture)
   const placeHolder = queryEngine(windowScope.document).query(

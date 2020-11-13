@@ -30,6 +30,9 @@ bower_components/*
 report/*
 reports/*
 selenium-debug.log
+selenium-server.log
 screenshots/
 .DS_Store
 lib/
+dist/
+yarn-error.log
