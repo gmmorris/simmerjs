@@ -1,5 +1,5 @@
 {
-  "name": "@mariusandra/simmerjs",
+  "name": "@posthog/simmerjs",
   "description": "A pure Javascript reverse CSS selector engine which calculates a DOM element's unique CSS selector on the current page.",
   "version": "0.7.1-posthog.1",
   "author": "Gidi Meir Morris",
@@ -18,13 +18,13 @@
   ],
   "dependencies": {
     "@babel/runtime": "^7.11.2",
-    "@mariusandra/query-selector-shadow-dom": "0.7.2-posthog",
     "@rollup/plugin-commonjs": "^15.1.0",
     "lodash.difference": "^4.5.0",
     "lodash.flatmap": "^4.5.0",
     "lodash.isfunction": "^3.0.8",
     "lodash.take": "^4.1.1",
-    "lodash.takeright": "^4.1.1"
+    "lodash.takeright": "^4.1.1",
+    "query-selector-shadow-dom": "0.8.0"
   },
   "scripts": {
     "test": "yarn run testUnit && yarn run testIntegration",
@@ -94,7 +94,7 @@
       "^.+\\.[t|j]sx?$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(@mariusandra)/)"
+      "node_modules/(?!(query-selector-shadow-dom)/)"
     ]
   }
 }
