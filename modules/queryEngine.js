@@ -1,4 +1,4 @@
-import { querySelectorAllDeep } from '@mariusandra/query-selector-shadow-dom'
+import { querySelectorAllDeep } from 'query-selector-shadow-dom'
 
 /**
  * Verify a specific ID's uniqueness one the page
