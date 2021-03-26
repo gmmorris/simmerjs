@@ -6,7 +6,7 @@ import Parser from './parser'
 import stackHierarchy from './stackHierarchy'
 import { configure } from './configuration'
 
-export default function createSimmer (
+export default function createSimmer(
   windowScope = window,
   customConfig = {},
   customQuery = false
@@ -14,11 +14,11 @@ export default function createSimmer (
   const config = configure(customConfig)
   const query = customQuery || initQueryEngine(windowScope, config.queryEngine)
   /**
-     * Handle errors in accordance with what is specified in the configuration
-     * @param {object/string} ex. The exception object or message
-     * @param {object} element. The element Simmer was asked to process
-     */
-  function onError (ex, element) {
+   * Handle errors in accordance with what is specified in the configuration
+   * @param {object/string} ex. The exception object or message
+   * @param {object} element. The element Simmer was asked to process
+   */
+  function onError(ex, element) {
     // handle error
     if (config.errorHandling === true) {
       throw ex
@@ -61,7 +61,9 @@ export default function createSimmer (
       // the stack is used to build a layer of selectors, each layer coresponding to a specific element in the heirarchy
       // for each level we create a private stack of properties, so that we can then merge them
       // comfortably and allow all methods to see the level at which existing properties have been set
-      stack: Array(hierarchy.length).fill().map(() => []),
+      stack: Array(hierarchy.length)
+        .fill()
+        .map(() => []),
       // follow the current specificity level of the selector - the higher the better
       specificity: 0
     }

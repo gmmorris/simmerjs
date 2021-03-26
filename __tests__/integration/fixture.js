@@ -61,6 +61,7 @@ export default `
       </div>
       <div class="this-is:fine"></div>
       <div id="somestuff" data-attr="blue"></div>
+      <div id="moreStuff" data-stonk-id="tusk"></div>
       <div>
           <div>
               <div>

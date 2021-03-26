@@ -1,4 +1,4 @@
-import inspectDataAttr from './inspectDataAttr'
+import inspectDataAttributes from './inspectDataAttributes'
 import inspectElementID from './inspectElementID'
 import inspectTags from './inspectTags'
 import inspectSiblings from './inspectSiblings'
@@ -20,7 +20,7 @@ const parsingMethods = {
   }
 }
 
-parsingMethods.addMethod(inspectDataAttr)
+parsingMethods.addMethod(inspectDataAttributes)
 parsingMethods.addMethod(inspectElementID)
 parsingMethods.addMethod(inspectTags)
 parsingMethods.addMethod(inspectSpecialAttributes)

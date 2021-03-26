@@ -8,11 +8,12 @@ import { attr } from './validationHelpers'
 export default function (hierarchy, state, validateSelector, config, query) {
   return hierarchy.reduce((selectorState, currentElem, index) => {
     if (!selectorState.verified) {
-      const [validatedState] = [currentElem.el.getAttribute('data-attr')]
-        .filter(id => attr(id))
-        .map(dataAttr => {
-          const isUnique = isUniqueDataAttr(query, dataAttr)
-          selectorState.stack[index].push(`[data-attr='${dataAttr}']`)
+      const [validatedState] = config.dataAttributes
+        .map((key) => [key, currentElem.el.getAttribute(key)])
+        .filter(([key, value]) => attr(value))
+        .map(([key, value]) => {
+          const isUnique = isUniqueDataAttr(query, key, value)
+          selectorState.stack[index].push(`[${key}='${value}']`)
           selectorState.specificity += isUnique ? 100 : 50
 
           if (selectorState.specificity >= config.specificityThreshold) {

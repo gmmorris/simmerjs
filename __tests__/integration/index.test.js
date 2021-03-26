@@ -14,7 +14,7 @@ const { JSDOM } = require('jsdom')
 const installSimmerOnWindow = windowScope => {
   exposeOnWindow(
     windowScope,
-    createSimmer(windowScope, { errorHandling: e => console.log(e) })
+    createSimmer(windowScope, { errorHandling: e => console.log(e), dataAttributes: ['data-attr', 'data-stonk-id'] })
   )
   return windowScope
 }
@@ -289,7 +289,7 @@ test(`can analyze an element with a class that contains a colon`, function () {
   expect(elements.selector).toEqual('DIV.this-is\\:fine')
 })
 
-test(`can analyze an element with data-attr`, function () {
+test(`can analyze an element with data attributes`, function () {
   const windowScope = createWindow(fixture)
   var elements = compareElementsAndSimmer(windowScope, '#somestuff')
   expect(elements).not.toBe(undefined)
@@ -297,6 +297,16 @@ test(`can analyze an element with data-attr`, function () {
   expect(elements.el).not.toBe(undefined)
   expect(elements.el).toBe(elements.SimmerEl)
   expect(elements.selector).toEqual("[data-attr='blue']")
+})
+
+test(`can analyze multiple elements with data attributes`, function () {
+  const windowScope = createWindow(fixture)
+  var elements = compareElementsAndSimmer(windowScope, '#moreStuff')
+  expect(elements).not.toBe(undefined)
+  expect(elements.SimmerEl).not.toBe(undefined)
+  expect(elements.el).not.toBe(undefined)
+  expect(elements.el).toBe(elements.SimmerEl)
+  expect(elements.selector).toEqual("[data-stonk-id='tusk']")
 })
 
 test(`can't analyze an element which is longer than the selectorMaxLength chars`, function () {

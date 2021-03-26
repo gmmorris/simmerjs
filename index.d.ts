@@ -95,6 +95,12 @@ export interface Options {
      *    exception and the element being analyzed
      */
     errorHandling?: boolean | ((error: any, element: Element) => void);
+
+    /**
+     * List of custom data attributes that take precedence over default attributes.
+     * For example: ['data-attr', 'data-custom-id']
+     */
+    dataAttributes?: string[]
 }
 
 interface SimmerConstructor {

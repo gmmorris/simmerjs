@@ -11,9 +11,9 @@ export function isUniqueElementID (query, elementID) {
   return results.length === 1
 }
 
-export function isUniqueDataAttr (query, dataAttr) {
+export function isUniqueDataAttr (query, key, value) {
   // use selector to query an element and see if it is a one-to-one selection
-  var results = query(`[data-attr="${dataAttr}"]`) || []
+  var results = query(`[${key}="${value}"]`) || []
   return results.length === 1
 }
 
